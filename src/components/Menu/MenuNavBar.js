@@ -12,8 +12,9 @@ export default function MenuNavBar(props) {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
       };
-    const handleClose = () => {
+    const handleClose = name => () => {
         setAnchorEl(null);
+        props.click(name)
     };
 
   return (
@@ -37,7 +38,7 @@ export default function MenuNavBar(props) {
             }}
             >
             {Array.from(props.categories).map((el)=>{
-                return <MenuItem onClick={handleClose}>{el}</MenuItem>
+                return <MenuItem onClick={handleClose(el)}>{el}</MenuItem>
             })}
         </Menu>
     </>

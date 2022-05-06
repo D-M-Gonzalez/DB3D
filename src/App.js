@@ -1,25 +1,19 @@
-import Grid from '@mui/material/Grid';
-import { Box } from '@mui/system';
-import NavBar from './components/NavBar';
-import ItemListContainer from './container/ItemListContainer';
+import React from 'react'
+import { Routes, Route } from "react-router-dom";
+import ItemDetailContainer from './container/ItemDetailContainer/ItemDetailContainer';
+import ItemList from './container/Item/ItemList';
+import ItemListContainer from './container/ItemListContainer/ItemListContainer';
+import Layout from './container/Layout/Layout';
 
-function App() {
-  return (
-    <>
-      <Grid container>
-        <Grid container item xs={12} justifyContent="center">
-          <Box component="img" src="./assets/LogoWeb.png" sx={{height:100, width:"auto"}}/>
-          <Box component="img" src="./assets/Proyectos.png" sx={{height:100, width:"auto"}}/>
-        </Grid>
-        <Grid item xs={12}>
-          <NavBar/>
-        </Grid>
-        <Grid item xs={12}>
-          <ItemListContainer text="Greetings"/>
-        </Grid>
-      </Grid>
-    </>
-  );
+export default function App() {
+  	return (
+		<Routes>
+			<Route path="/" element={<Layout/>}>
+				<Route path="items/" element={<ItemListContainer/>}>
+					<Route path="list" element={<ItemList/>}/>
+				</Route>
+				<Route path="detail/:id" element={<ItemDetailContainer/>}/>
+			</Route>
+		</Routes>
+  	)
 }
-
-export default App;

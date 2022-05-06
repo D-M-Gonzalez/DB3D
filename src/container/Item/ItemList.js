@@ -1,44 +1,22 @@
-import React, {useState, useEffect} from 'react'
-import { Grid, Backdrop, CircularProgress } from '@mui/material'
-import itemExample from '../../data/itemExample'
+import React from 'react'
+import { Grid } from '@mui/material'
 import SingleItem from '../../components/Item/SingleItem'
 
 
-export default function ItemList() {
-    const [loaded, setLoaded] = useState(false);
-    const [open, setOpen] = useState(true);
+export default function ItemList(props) {
+        const handleClick = id => () => {
+            props.detail(id)
+        }
 
-    useEffect(()=>{
-        time();
-    },[])
-
-    const time = async () => {
-		const response = await new Promise(function(resolve,reject){
-			setTimeout(function(){resolve("okay")},2000)
-		});
-		response && setLoaded(true)
-    }
-
-    if(!loaded){
-        return (
-            <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={open}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
-        )
-    } else {
         return (
           <Grid container>
-              {Array.from(itemExample).map((el)=>{
+              {Array.from(props.items).map((el)=>{
                   return (
-                      <Grid item xs={3} spacing={1}>
-                          <SingleItem name={el.name} price={el.price} />
+                      <Grid item container key={el.data.id} xs={3} m={2} onClick={handleClick(el.data.id)}>
+                          <SingleItem key={el.data.id} name={el.data.name} price={el.data.price} image={el.data.image_url}/>
                       </Grid>
                   )
               })}
           </Grid>
         )
     }
-}
