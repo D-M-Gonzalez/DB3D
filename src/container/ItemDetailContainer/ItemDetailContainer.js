@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React, {useState, useEffect} from 'react'
-import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 import DetailItem from '../../components/Item/DetailItem';
 
 export default function ItemDetailContainer(props) {

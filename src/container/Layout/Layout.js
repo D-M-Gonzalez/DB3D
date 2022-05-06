@@ -36,7 +36,7 @@ export default function Layout() {
         }
         if (searchParams.get("search") !== ""){
             filter = filter.filter((el)=>{
-                return el.data.name.includes(searchParams.get("search"))
+                return el.data.name.toUpperCase().includes(searchParams.get("search").toUpperCase())
             })
         }
         setFilteredStore(filter)
