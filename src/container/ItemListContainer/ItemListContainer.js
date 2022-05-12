@@ -1,76 +1,85 @@
 import React, {useState, useEffect} from 'react';
-import {Grid,Backdrop, CircularProgress,Typography, Button} from '@mui/material/';
+import {Grid,Backdrop, CircularProgress,Box, Divider, Pagination} from '@mui/material/';
 import ItemList from '../Item/ItemList';
-import { useOutletContext, useNavigate } from 'react-router-dom';
-import { findProducts } from '../../controllers/findProducts';
+import { useOutletContext, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import FilterMenu from '../../components/Menu/FilterMenu';
+import FilterAccordion from '../../components/Accordions/FilterAccordion';
+import { itemCategories } from '../../data/itemCategories';
+import SearchForm from '../../components/SearchForm/SearchForm';
 
-export default function ItemListContainer(props) {
-  	const {createStore, loadStore, categoryChange} = useOutletContext();
-	const [store, setStore] = createStore;
-	const [items, setItems] = loadStore;
-	const [category, setCategory] = categoryChange;
-	const [notLoaded, setNotLoaded] = useState(true);
+export default function ItemListContainer() {
+  	const {loadStore,page,total,size} = useOutletContext();
+	const [filteredItems, setFilteredItems] = useState();
+	const [searchParams, setSearchParams] = useSearchParams({
+		page: 1,
+		size: 10
+	})
 	const nav = useNavigate();
+	const URL = useLocation()
 
-  	useEffect(()=>{
-		fetchData().catch(console.error);
-	},[])
-	
-	const fetchData = async () => {
-		const response = await findProducts();
-		setNotLoaded(false);
-		store(response);
-	}
+	useEffect(()=>{
+		if(loadStore){
+			try{
+				setFilteredItems(loadStore)
+			} catch(error){
+				console.log(error)
+			}
+		}
+	},[loadStore])
 
 	const showDetail = (id) => {
 		nav(`/detail/${id}`)
 	}
 
-	const handleClick = (event) => {
-		category(event.target.name)
-	}
+	const handleChange = (event, value) => {
+		setSearchParams({...Object.fromEntries([...searchParams]),page:value,size:10})
+	};
 
-
-	if(notLoaded){
+	if(!filteredItems){
 		return (
             <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-			open={notLoaded}
-          >
+			open={true}
+          	>
             <CircularProgress color="inherit" />
           </Backdrop>			
 		)
 	} else {
 		return (
-		  <Grid container>
-			  <Grid item container mt={2} xs={12} justifyContent="center">
-				  <Typography fontWeight="bold" color="black" fontSize={30}>Products</Typography>
-			  </Grid>
-			  <Grid item container mt={2} xs={12} justifyContent="center">
-			  	<Grid item>
-				  	<Button variant="contained" name="all" onClick={handleClick}>All</Button>
-				  </Grid>
-				  <Grid item xs={1}/>
-				  <Grid item>
-				  	<Button variant="contained" name="ford" onClick={handleClick}>Ford</Button>
-				  </Grid>
-				  <Grid item xs={1}/>
-				  <Grid item>
-				  	<Button variant="contained" name="peugeot" onClick={handleClick}>Peugeot</Button>
-				  </Grid>
-				  <Grid item xs={1}/>
-				  <Grid item>
-				  	<Button variant="contained" name="fiat" onClick={handleClick}>Fiat</Button>
-				  </Grid>
-				  <Grid item xs={1}/>
-				  <Grid item>
-				  	<Button variant="contained" name="chevrolet" onClick={handleClick}>Chevrolet</Button>
-				  </Grid>
-			  </Grid>
-			  <Grid item xs={12}>
-				  <ItemList items={items} detail={showDetail}/>
-			  </Grid>
-		  </Grid>
+		  	<Grid container sx={{backgroundColor:"white"}}>
+			  	<Grid item container mt={1} mb={1} xs={12} sx={{height:40}} alignItems="center">
+					<Box
+						display="flex"
+						flexDirection="row"
+						justifyContent="space-evenly"
+						sx={{width:"100%"}}
+					>
+						<FilterMenu text="Ordenar por Fecha" id="sortbydate"/>
+						<FilterMenu text="Ordenar por Precio" id="sortbyprice"/>
+						<FilterMenu text="Ordenar por Nombre" id="sortbyname"/>
+					</Box>
+				</Grid>
+				<Divider style={{width:'100%'}} />
+				<Grid item sm={3} xs={12}>
+					<Box
+						display="flex"
+						flexDirection="column"
+						>
+						<SearchForm/>
+						{Object.entries(itemCategories).map((category)=>{
+							return (
+								<FilterAccordion key={category[1].label} label={category[1].label} subcategories={category[1].subcategories}/>
+							)
+						})}
+						<Divider style={{width:'100%'}} />
+					</Box>
+				</Grid>
+				<Divider orientation="vertical" flexItem />
+				<Grid item container pt={2} pb={2} sm={8.95} xs={11.95} justifyContent="center" sx={{backgroundColor:"rgb(240, 240, 240)"}}>
+					<ItemList items={filteredItems} detail={showDetail}/>
+					<Pagination count={Math.trunc(total/size)+1} page={Number(page)} onChange={handleChange} siblingCount={1} boundaryCount={1}/>
+				</Grid>
+			</Grid>
 		)
 	}
 }

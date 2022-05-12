@@ -1,70 +1,51 @@
-import React, {useState, useEffect} from 'react'
-import {Grid, Typography} from '@mui/material/';
+import React, {useState, useEffect, useRef} from 'react'
+import {Grid, Typography, Box, Divider, useTheme, useMediaQuery} from '@mui/material/';
 import NavBar from '../../components/NavBar/NavBar';
 import { useNavigate, Outlet, useSearchParams, useLocation } from 'react-router-dom';
+import Context from '../../store/Context';
+import Footer from '../Footer/Footer';
 
 export default function Layout() {
-    const [store, setStore] = useState([])
-    const [filteredStore, setFilteredStore] = useState([])
-    const [searchParams, setSearchParams] = useSearchParams();
+    const theme = useTheme()
+    const smallDevices = useMediaQuery(theme.breakpoints.up('sm'))
     const location = useLocation()
-    const nav = useNavigate()
+    const navigate = useNavigate()
+    const layoutRef = useRef()
 
     useEffect(()=>{
-        location.pathname === "/" && nav("/items/list?page=1&size=10&category=ALL&search=")
-        location.pathname === "/items/list" && setFilters();
-    },[store,searchParams])
-    
-    const setFilters = () => {
-        let search = {}
-        !searchParams.get("page") ? (search = ({...search,page:1})) : (search = ({...search,page:searchParams.get("page")}))
-        !searchParams.get("size") ? (search = ({...search,size:10})) : (search = ({...search,size:searchParams.get("size")}))
-        !searchParams.get("category") ? (search = ({...search,category:"ALL"})) : (search = ({...search,category:searchParams.get("category")}))
-        !searchParams.get("search") ? (search = ({...search,search:""})) : (search = ({...search,search:searchParams.get("search")}))
-        setSearchParams(search)
-        filterItems(); 
-    }
-
-    const filterItems = () => {
-        let filter = [];
-        if (searchParams.get("category") !== "ALL"){
-            filter = store.filter((el)=>{
-                return el.data.brand.brand_name.toUpperCase().includes(searchParams.get("category"))
-            })
-        } else {
-            filter = store
-        }
-        if (searchParams.get("search") !== ""){
-            filter = filter.filter((el)=>{
-                return el.data.name.toUpperCase().includes(searchParams.get("search").toUpperCase())
-            })
-        }
-        setFilteredStore(filter)
-
-	}
-    
-    const category = (input) => {
-        setSearchParams({...Object.fromEntries([...searchParams]),category:input.toUpperCase()})    
-    }
-
-    const searchName = (input) => {
-        setSearchParams({...Object.fromEntries([...searchParams]),search:input})
-    }
-
-    const createStore = (items) => {
-        setStore(items);
-    }
+        location.pathname === '/' && navigate('/home?section=us')
+    },[])
 
     return (
-        <Grid container>
+        <Grid container ref={layoutRef}>
+            <Grid item container xs={12}>
+                {smallDevices ? 
+                    <Grid item container xs={12} sx={{backgroundColor:"white"}}>
+                        <Grid item container lg={2} md={2.5} sm={1.4} justifyContent="center">
+                            <Box component="img" src="/assets/LogoDB3D2Black.png" sx={{height:"8vw", width:"auto"}}/>
+                        </Grid>
+                        <Grid item lg={2} md={1.5} sm={0.1}/>
+                        <Grid item container lg={8} md={8} sm={10.5}  alignItems="center">
+                            <NavBar/>
+                        </Grid>
+                    </Grid>
+                :
+                <Grid item container xs={12}>
+                    <NavBar/>
+                </Grid>              
+            }
+            </Grid>
+            <Grid item xs={12}>
+                <Divider/>
+            </Grid>
             <Grid item container xs={12} justifyContent="center">
-                <Typography m={4} fontSize={50} fontWeight="bolder">THE BEST CAR SHOP!</Typography>
+                <Context layoutRef={layoutRef}/>
             </Grid>
-            <Grid item container xs={12}>
-                <NavBar search={searchName}/>
+            <Grid item xs={12}>
+                <Divider/>
             </Grid>
-            <Grid item container xs={12}>
-                <Outlet context={{createStore:[createStore],loadStore:[filteredStore],categoryChange:[category]}}/>
+            <Grid item xs={12}>
+                <Footer/>
             </Grid>
         </Grid>
     )
