@@ -3,6 +3,7 @@ import { Outlet, useSearchParams, useLocation } from 'react-router-dom';
 import {useMediaQuery, useTheme} from '@mui/material/';
 import { Global } from '../App';
 import { customTheme } from '../MuiTheme';
+import { findProducts } from '../controllers/findProducts';
 
 export default function Context(props) {
     
@@ -47,82 +48,26 @@ export default function Context(props) {
 	},[JSON.stringify(imageSize)])
 
     useEffect(()=>{
-        initialSetup();
-    },[globalData])
-
-    useEffect(()=>{
-        if ( globalData && URL.pathname === '/items/list' ){
+        if ( URL.pathname === '/items/list' ){
             filterItems()
         }
     },[searchParams])
 
-    const initialSetup = async () => {
-        try {
-            filterItems()
-        } catch(error) {
-            console.log(error)
-        }
-    }
+    const filterItems = async () => {
+        const page = searchParams.get("page")
+        const size = searchParams.get("size")
+        const category = searchParams.get("category")
+        const subcategory = searchParams.get("subcategory")
+        const search = searchParams.get("search")
+        const response = await findProducts(page,size,category,subcategory,search)
 
-    const filterItems = () => {
-        let filteredItems = globalData.products;
-        if(searchParams.get("search") !== "undefined") {filteredItems = filteredItems.filter((el)=>{
-            let product = el.data.name.toUpperCase()
-            let param = searchParams.get("search")
-            param = param.replace("+"," ")
-            param = param.toUpperCase()
-            return product.includes(param)
-        })} else {
-            setSearchParams({...Object.fromEntries([...searchParams]),search:""});
-        }
-
-        if(searchParams.get("sort")){
-            let sort = searchParams.get("sort")
-            sort = sort.split(".")
-            if(sort[0] === "sortbyname"){
-                filteredItems.sort(function(a,b){
-                    let itemA = a.data.name;
-                    let itemB = b.data.name;
-
-                    if(itemA < itemB){ return -1}
-                    if(itemA > itemB){ return 1}
-
-                    return 0})
-            }
-            if(sort[0] === "sortbydate"){
-                filteredItems.sort(function(a,b){
-                    let itemA = a.data.date;
-                    let itemB = b.data.date;
-
-                    if(itemA < itemB){ return -1}
-                    if(itemA > itemB){ return 1}
-
-                    return 0})
-            }
-            if(sort[0] === "sortbyprice"){
-                filteredItems.sort(function(a,b){
-                    let itemA = a.data.price;
-                    let itemB = b.data.price;
-
-                    if((itemA - itemB) < 0){ return -1}
-                    if((itemA - itemB) > 0){ return 1}
-
-                    return 0})
-            }
-            sort[1] === "desc" && filteredItems.reverse();
-        } else {
-            setSearchParams({...Object.fromEntries([...searchParams]),sort:"sortbyname.asc"});
-        }
-
-        setPagination({...pagination,
-            page:searchParams.get("page"),
-            size:searchParams.get("size"),
-            total:filteredItems.length,
+        setPagination({
+            page:page,
+            size:size,
+            total:response.total
         })
-        
-        filteredItems = filteredItems.slice((searchParams.get("size")*(searchParams.get("page")-1)),(searchParams.get("size")*(searchParams.get("page"))))
 
-        setStore(filteredItems)
+        setStore(response)
     }
 
     return (

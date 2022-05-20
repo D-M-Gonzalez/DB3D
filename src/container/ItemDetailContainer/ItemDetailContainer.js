@@ -4,30 +4,24 @@ import { useParams, useNavigate} from 'react-router-dom';
 import DetailItem from '../../components/Item/DetailItem';
 import { Global } from '../../App';
 import Navigate from '../../modules/Navigator';
+import { findProductById } from '../../controllers/findProductById';
 
 export default function ItemDetailContainer(props) {
     const globalData = useContext(Global);
     const [searchedItem, setSearchedItem] = useState();
-    const [cant, setCant] = useState();
+    const [cant, setCant] = useState(1);
     const [bought, setBought] = useState(false);
     const params = useParams()
     const nav = useNavigate()
 
     useEffect(()=>{   
-        if(globalData){
-            try{
-                setSearchedItem(globalData.products.find((el)=>{
-                    return el.data.id === params.id;
-                }))
-                const found = globalData.cartList.find((item)=>{
-                    return item.id === params.id
-                })
-                found && setBought(true)
-            } catch (error){
-                console.log(error)
-            }
-        }
-    },[globalData])
+        getProductById()
+    },[])
+
+    const getProductById = async () => {
+        const response = await findProductById(params.id)
+        setSearchedItem(response)
+    }
 
     const handleClick = (event) => {
         event.currentTarget.id === "back" && nav(-1);
@@ -45,6 +39,8 @@ export default function ItemDetailContainer(props) {
             cartArray.push({
                 id:searchedItem.data.id,
                 cant:cant,
+                name:searchedItem.data.name,
+                price:searchedItem.data.price,
             })
             globalData.update({...globalData,cartList:cartArray});
         }

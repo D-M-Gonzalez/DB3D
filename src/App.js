@@ -16,20 +16,21 @@ export const Global = createContext();
 export default function App() {
 	const [globalState, setGlobalState] = useState({
 		cartList:[],
+		totalItems: 0,
 		update: (data) => updateGlobal(data),
 	})
 	
 	const updateGlobal = (data) => {
 		setGlobalState(data);
+		getTotalItems(data)
 	}
 
-	useEffect(()=>{
-		fetchData().catch(console.error);
-	},[])
-
-	const fetchData = async () => {
-		const response = await findProducts();
-		setGlobalState({...globalState,products:response})
+	const getTotalItems = (data) => {
+		let cant = 0;
+		data.cartList.forEach((item)=>{
+			cant = cant + Number(item.cant)
+		})
+		setGlobalState({...data,totalItems:cant})
 	}
 
   	return (

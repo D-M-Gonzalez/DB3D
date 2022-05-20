@@ -18,40 +18,38 @@ export default function Checkout() {
                 console.log(error)
             }
         }
+		console.log(globalData)
     },[globalData])
 
 	const fillProductList = () => {
-		let tempArray = []
-		globalData.cartList.forEach((cartItem)=>{
-			let itemToAdd = globalData.products.find((item)=>{
-				return item.data.id === cartItem.id
-			})
-			itemToAdd && tempArray.push({
-				product:itemToAdd,
-				cant:cartItem.cant || 1,
-			})
-		})
-		setProductList(tempArray)
+		setProductList(globalData)
 	}
 
 	const handleClick = name => (event) => {
-		name === "buy" && alert("compraste!, pero todavía no funciona ;)")
-		if(name === "clear"){
+		name.action === "buy" && alert("compraste!, pero todavía no funciona ;)")
+		if(name.action === "clear"){
 			globalData.update({...globalData,cartList:[]});
 			setProductList({})
 		}
-		name === "back" && nav(Navigate("MEDICINA"))
+		name.action === "back" && nav(Navigate("ALL"))
+		if(name.action === "delete"){
+			let itemToDelete = []
+			globalData.cartList.forEach((item)=>{
+				item.id !== name.id && itemToDelete.push(item)
+			})
+			globalData.update({...globalData,cartList:itemToDelete});
+		}
 	}
 
 	const calculateTotal = () => {
 		let total = 0;
-		Array.from(productList).forEach((product)=>{
-			total = total + (product.product.data.price * product.cant)
+		Array.from(productList.cartList).forEach((product)=>{
+			total = total + (product.price * product.cant)
 		})
 		return total
 	}
 
-    if(!productList){
+    if(Object.keys(productList).length < 1){
 		return (
             <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -68,31 +66,40 @@ export default function Checkout() {
 					<Grid item container mt={2} xs={12} justifyContent="center">
 						<Typography fontWeight={700} fontSize={{lg:40,md:35,sm:30}}>Checkout</Typography>
 					</Grid>
-					<Grid item container mt={2} xs={12} justifyContent="center">
-						<CheckoutTable list={productList} handleClick={handleClick}/>
+					{productList.cartList.length > 0 ? 
+					<>
+						<Grid item container mt={2} xs={12} justifyContent="center">
+							<CheckoutTable list={productList} handleClick={handleClick}/>
+						</Grid>
+						<Grid item xs={8}/>
+						<Grid item container xs={3}>
+							<Paper>
+								<Box
+									display="flex"
+									flexDirection="row"
+									>
+									<Typography ml={1} mr={1} fontSize={{lg:18,md:16,sm:14}}>Total</Typography>
+									<Typography fontWeight={600} fontSize={{lg:18,md:16,sm:14}}>
+										{calculateTotal()}
+									</Typography>
+									<Typography fontWeight={600} fontSize={{lg:18,md:16,sm:14}}>$</Typography>
+								</Box>
+							</Paper>
+						</Grid>
+						<Grid item xs={1}/>
+					</>
+					:
+					<Grid item container xs={12} justifyContent="center" alignItems="center" sx={{height:"200px"}}>
+						<Typography fontSize={{lg:30,md:25,sm:20}}>Oops! Todavía no has agregado ningún producto!</Typography>
 					</Grid>
-					<Grid item xs={8}/>
-					<Grid item container xs={3}>
-						<Paper>
-							<Box
-								display="flex"
-								flexDirection="row"
-								>
-								<Typography ml={1} mr={1} fontSize={{lg:18,md:16,sm:14}}>Total</Typography>
-								<Typography fontWeight={600} fontSize={{lg:18,md:16,sm:14}}>
-									{calculateTotal()}
-								</Typography>
-								<Typography fontWeight={600} fontSize={{lg:18,md:16,sm:14}}>$</Typography>
-							</Box>
-						</Paper>
-					</Grid>
-					<Grid item xs={1}/>
+				}
 					<Grid item container mt={2} mb={2} xs={12}>
 						<Grid item xs/>
 						<Grid item container xs={4} justifyContent="center">
 							<Button
 								variant="db3d"
-								onClick={handleClick("buy")}
+								onClick={handleClick({action:"buy"})}
+								disabled= {!productList.cartList.length > 0}
 								>
 								<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Confirmar compra</Typography>
 							</Button>
@@ -100,7 +107,7 @@ export default function Checkout() {
 						<Grid item container xs={2} justifyContent="center">
 							<Button
 								variant="db3d"
-								onClick={handleClick("back")}
+								onClick={handleClick({action:"back"})}
 								>
 								<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Volver</Typography>
 							</Button>
@@ -108,7 +115,8 @@ export default function Checkout() {
 						<Grid item container xs={3} justifyContent="center">
 							<Button
 								variant="db3d"
-								onClick={handleClick("clear")}
+								onClick={handleClick({action:"clear"})}
+								disabled= {!productList.cartList.length > 0}
 								>
 								<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Limpiar lista</Typography>
 							</Button>

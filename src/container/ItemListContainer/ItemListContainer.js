@@ -10,6 +10,7 @@ import SearchForm from '../../components/SearchForm/SearchForm';
 export default function ItemListContainer() {
   	const {loadStore,page,total,size} = useOutletContext();
 	const [filteredItems, setFilteredItems] = useState();
+	const [expanded, setExpanded] = useState();
 	const [searchParams, setSearchParams] = useSearchParams({
 		page: 1,
 		size: 10
@@ -34,6 +35,10 @@ export default function ItemListContainer() {
 	const handleChange = (event, value) => {
 		setSearchParams({...Object.fromEntries([...searchParams]),page:value,size:10})
 	};
+
+	const handleExpanded = (label) => {
+		setExpanded(label)
+	}
 
 	if(!filteredItems){
 		return (
@@ -68,7 +73,7 @@ export default function ItemListContainer() {
 						<SearchForm/>
 						{Object.entries(itemCategories).map((category)=>{
 							return (
-								<FilterAccordion key={category[1].label} label={category[1].label} subcategories={category[1].subcategories}/>
+								<FilterAccordion key={category[1].id} id={category[1].id} label={category[1].label} subcategories={category[1].subcategories} expanded={expanded} checkExpanded={handleExpanded}/>
 							)
 						})}
 						<Divider style={{width:'100%'}} />
@@ -76,7 +81,7 @@ export default function ItemListContainer() {
 				</Grid>
 				<Divider orientation="vertical" flexItem />
 				<Grid item container pt={2} pb={2} sm={8.95} xs={11.95} justifyContent="center" sx={{backgroundColor:"rgb(240, 240, 240)"}}>
-					<ItemList items={filteredItems} detail={showDetail}/>
+					<ItemList items={filteredItems.items} detail={showDetail}/>
 					<Pagination count={Math.trunc(total/size)+1} page={Number(page)} onChange={handleChange} siblingCount={1} boundaryCount={1}/>
 				</Grid>
 			</Grid>

@@ -26,36 +26,36 @@ export default function CheckoutTable(props) {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {Array.from(props.list).map((row) => (
+                {Array.from(props.list.cartList).map((cartItem) => (
                     <TableRow
-                        key={row.product.data.id}
+                        key={cartItem.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                         <TableCell component="th" scope="row">
                             <Button
                                 variant="filter"
                                 onClick={props.handleClick({
-                                    id:row.product.data.id,
+                                    id:cartItem.id,
                                     action:"navigate",
                                 })}
                                 >
-                                <Typography>{row.product.data.name}</Typography>
+                                <Typography>{cartItem.name}</Typography>
                             </Button>
                         </TableCell>
                         <TableCell align="right">
-                            <Typography>{row.cant}</Typography>
+                            <Typography>{cartItem.cant}</Typography>
                         </TableCell>
                         <TableCell align="right">
                             <Typography>Rojo</Typography>
                         </TableCell>
                         <TableCell align="right">
-                            <Typography>$&nbsp;{row.product.data.price}</Typography>
+                            <Typography>$&nbsp;{cartItem.price}</Typography>
                         </TableCell>
                         <TableCell align="center">
                             <Button
                                 variant="filter"
                                 onClick={props.handleClick({
-                                    id:row.product.data.id,
+                                    id:cartItem.id,
                                     action:"delete",
                                 })}
                                 >
