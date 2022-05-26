@@ -10,7 +10,7 @@ export default function DetailItem(props) {
 			<Container>
 				<Grid container justifyContent="center">
 					<Grid container item md={6} xs={12} justifyContent="center">
-						<Box component="img" sx={{width:`${500*(Math.pow(imageSizeMultiplier,2))}px`,height:`${400*(Math.pow(imageSizeMultiplier,2))}px`}} src={props.item.images[0]} />
+						<Box component="img" sx={{width:`${400*(Math.pow(imageSizeMultiplier,2))}px`,height:`${500*(Math.pow(imageSizeMultiplier,2))}px`}} src={props.item.images[0]} />
 					</Grid>
 					<Grid container item md={6} xs={12} justifyContent="center">
 						<Grid container item xs={12} justifyContent="center">

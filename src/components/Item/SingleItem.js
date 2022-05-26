@@ -9,7 +9,8 @@ const HoverPaper = styled(Box)(({theme})=>({
     transition: "transform 0.35s ease-in-out , background-color 0.35s ease-in-out",
     "&:hover": {
         backgroundColor: "#ffe6e9",
-        transform: "scale(1.1,1.1)"
+        transform: "scale(1.1,1.1)",
+        cursor: "pointer",
     }
   }));
 
@@ -24,9 +25,9 @@ export default function SingleItem(props) {
             alignItems="center"
         >
             <HoverPaper>
-                <Grid item container xs={12} sx={{width:`${250*imageSizeMultiplier}px`}}>
+                <Grid item container xs={12} sx={{width:`${200*imageSizeMultiplier}px`}}>
                     <Grid item container xs={12} justifyContent="center">
-                        <Box component="img" src={props.image} sx={{width:`${250*imageSizeMultiplier}px`, height:`${200*imageSizeMultiplier}px`, borderRadius:0}}></Box>
+                        <Box component="img" src={props.image} sx={{width:`${200*imageSizeMultiplier}px`, height:`${250*imageSizeMultiplier}px`, borderRadius:0}}></Box>
                     </Grid>
                     <Grid container>
                         <Grid item xs={12}/>

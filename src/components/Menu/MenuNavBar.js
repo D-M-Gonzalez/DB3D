@@ -2,7 +2,6 @@ import React from 'react'
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
 
 
 export default function MenuNavBar(props) {
@@ -20,9 +19,10 @@ export default function MenuNavBar(props) {
             aria-controls={props.open === props.name ? props.name : undefined}
             aria-haspopup="true"
             aria-expanded={props.open === props.name ? 'true' : undefined}
+            size={props.size}
             onClick={props.handleClick}
             >
-            <Typography fontSize={{lg:25,md:22,sm:16,xs:14}} fontWeight={700} color="black">{props.name}</Typography>
+            {props.name}
         </Button>
         <Menu
             id={props.name}

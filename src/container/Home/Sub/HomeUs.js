@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Typography } from '@mui/material';
 import Reveal from 'react-awesome-reveal'
 import { keyframes } from "@emotion/react";
-import fondo3 from '../../../img/fondo3.png';
+import fondo3 from '../../../img/fondo3.jpg';
 
 const background = {
 	width:"95vw",

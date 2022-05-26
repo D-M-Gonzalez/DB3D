@@ -11,6 +11,10 @@ const REDES_SOCIALES = 'REDESSOCIALES'
 const CONTACTANOS = 'MENSAJES'
 const CHECKOUT = 'CHECKOUT'
 const ALL = 'ALL'
+const SIGNUP = 'SIGNUP'
+const LOGIN = 'LOGIN'
+const MODIFYUSER = 'MODIFYUSER'
+const USERORDERS = 'USERORDERS'
 
 function Navigate(name){
     let url = ""
@@ -28,6 +32,10 @@ function Navigate(name){
     destination === REDES_SOCIALES && (url = '/contact?section=social_media');
     destination === CONTACTANOS && (url = '/contact?section=contact_us');
     destination === CHECKOUT && (url = '/checkout');
+    destination === SIGNUP && (url = '/signup');
+    destination === LOGIN && (url = '/login');
+    destination === MODIFYUSER && (url = '/modifyuser');
+    destination === USERORDERS && (url = `/userorders/${JSON.parse(sessionStorage.getItem("id"))}`);
 
     return url
 }

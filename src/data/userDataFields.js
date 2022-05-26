@@ -1,0 +1,66 @@
+export const userDataFields = {
+	email:{
+		label:"Email",
+		data:"",
+		error:"",
+		errorText:"",
+		width:350,
+		mode:["register","checkout","login","password"]
+	},
+	repemail:{
+		label:"Repetir email",
+		data:"",
+		error:"",
+		errorText:"",
+		width:350,
+		mode:["checkout"]
+	},
+	oldpassword:{
+		label:"Password anterior",
+		data:"",
+		error:"",
+		errorText:"",
+		width:250,
+		mode:["password"]		
+	},
+	password:{
+		label:"Password",
+		data:"",
+		error:"",
+		errorText:"",
+		width:250,
+		mode:["login","register","password"]		
+	},
+	reppassword:{
+		label:"Repetir Password",
+		data:"",
+		error:"",
+		errorText:"",
+		width:250,
+		mode:["register"]		
+	},
+	name:{
+		label:"Nombre",
+		data:"",
+		error:"",
+		errorText:"",
+        width:250,
+		mode:["register","checkout","modify"]
+	},
+	surname:{
+		label:"Apellido",
+		data:"",
+		error:"",
+		errorText:"",
+        width:250,
+		mode:["register","checkout","modify"]
+	},
+	phone:{
+		label:"Teléfono",
+		data:"",
+		error:"",
+		errorText:"",
+        width:200,
+		mode:["register","checkout","modify"]
+	},
+}

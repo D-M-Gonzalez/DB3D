@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Grid,Backdrop, CircularProgress,Box, Divider, Pagination} from '@mui/material/';
 import ItemList from '../Item/ItemList';
-import { useOutletContext, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { useOutletContext, useNavigate, useSearchParams} from 'react-router-dom';
 import FilterMenu from '../../components/Menu/FilterMenu';
 import FilterAccordion from '../../components/Accordions/FilterAccordion';
 import { itemCategories } from '../../data/itemCategories';
@@ -16,12 +16,12 @@ export default function ItemListContainer() {
 		size: 10
 	})
 	const nav = useNavigate();
-	const URL = useLocation()
 
 	useEffect(()=>{
 		if(loadStore){
 			try{
 				setFilteredItems(loadStore)
+				setExpanded(searchParams.get("category").toLowerCase())
 			} catch(error){
 				console.log(error)
 			}

@@ -6,7 +6,7 @@ import { Global } from '../../App';
 import Navigate from '../../modules/Navigator';
 import { findProductById } from '../../controllers/findProductById';
 
-export default function ItemDetailContainer(props) {
+export default function ItemDetailContainer() {
     const globalData = useContext(Global);
     const [searchedItem, setSearchedItem] = useState();
     const [cant, setCant] = useState(1);
@@ -16,6 +16,11 @@ export default function ItemDetailContainer(props) {
 
     useEffect(()=>{   
         getProductById()
+        if(globalData.cartList.find((item)=>{
+            return item.id === params.id
+        })){
+            setBought(true);
+        }
     },[])
 
     const getProductById = async () => {
@@ -77,7 +82,7 @@ export default function ItemDetailContainer(props) {
                                     onClick={handleClick}
                                     disabled={bought}
                                     >
-                                    <Typography fontSize={{lg:25,md:22,sm:16,xs:14}} fontWeight={700} color="black">Comprar</Typography>
+                                    Comprar
                                 </Button>
                             </Grid>
                             <Grid item xs/>
@@ -87,7 +92,7 @@ export default function ItemDetailContainer(props) {
                                     variant='db3d'
                                     onClick={handleClick}
                                     >
-                                    <Typography fontSize={{lg:25,md:22,sm:16,xs:14}} fontWeight={700} color="black">Volver</Typography>
+                                    Volver
                                 </Button>
                             </Grid>
                             <Grid item xs={4}/>
@@ -99,7 +104,7 @@ export default function ItemDetailContainer(props) {
                                     variant='db3d'
                                     onClick={handleClick}
                                 >
-                                    <Typography fontSize={{lg:25,md:22,sm:16,xs:14}} fontWeight={700}>Ir al Checkout</Typography>
+                                Ir al Checkout
                                 </Button>
                             }
                         </Grid>

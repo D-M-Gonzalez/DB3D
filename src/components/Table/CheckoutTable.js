@@ -4,24 +4,24 @@ import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper, Typog
 export default function CheckoutTable(props) {
 
   return (
-    <TableContainer sx={{m:5,mb:0.5}} component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer sx={{m:5,mb:0.5,width:"70vw"}} component={Paper}>
+        <Table aria-label="simple table">
             <TableHead>
                 <TableRow>
                     <TableCell>
-                        <Typography fontWeight={600}>Producto</Typography>
+                        <Typography fontWeight={600} fontSize={{md:20,sm:15,xs:10}}>Producto</Typography>
                     </TableCell>
                     <TableCell align="right">
-                        <Typography fontWeight={600}>Cantidad</Typography>
+                        <Typography fontWeight={600} fontSize={{md:20,sm:15,xs:10}}>Cantidad</Typography>
                     </TableCell>
                     <TableCell align="right">
-                        <Typography fontWeight={600}>Color</Typography>
+                        <Typography fontWeight={600} fontSize={{md:20,sm:15,xs:10}}>Color</Typography>
                     </TableCell>
                     <TableCell align="right">
-                        <Typography fontWeight={600}>Precio&nbsp;($)</Typography>
+                        <Typography fontWeight={600} fontSize={{md:20,sm:15,xs:10}}>Precio&nbsp;($)</Typography>
                     </TableCell>
                     <TableCell align="center">
-                        <Typography fontWeight={600}>Eliminar</Typography>
+                        <Typography fontWeight={600} fontSize={{md:20,sm:15,xs:10}}>Eliminar</Typography>
                     </TableCell>
                 </TableRow>
             </TableHead>
@@ -36,20 +36,20 @@ export default function CheckoutTable(props) {
                                 variant="filter"
                                 onClick={props.handleClick({
                                     id:cartItem.id,
-                                    action:"navigate",
+                                    action:"item",
                                 })}
                                 >
-                                <Typography>{cartItem.name}</Typography>
+                                <Typography fontSize={{md:20,sm:15,xs:10}}>{cartItem.name}</Typography>
                             </Button>
                         </TableCell>
                         <TableCell align="right">
-                            <Typography>{cartItem.cant}</Typography>
+                            <Typography fontSize={{md:20,sm:15,xs:10}}>{cartItem.cant}</Typography>
                         </TableCell>
                         <TableCell align="right">
-                            <Typography>Rojo</Typography>
+                            <Typography fontSize={{md:20,sm:15,xs:10}}>Rojo</Typography>
                         </TableCell>
                         <TableCell align="right">
-                            <Typography>$&nbsp;{cartItem.price}</Typography>
+                            <Typography fontSize={{md:20,sm:15,xs:10}}>$&nbsp;{cartItem.price}</Typography>
                         </TableCell>
                         <TableCell align="center">
                             <Button
@@ -59,11 +59,36 @@ export default function CheckoutTable(props) {
                                     action:"delete",
                                 })}
                                 >
-                            <Typography fontWeight={700} fontSize={16}>X</Typography>
+                            <Typography fontWeight={700} fontSize={{md:20,sm:15,xs:10}}>X</Typography>
                             </Button>
                         </TableCell>
-                    </TableRow>
+                    </TableRow>          
                 ))}
+                <TableRow>
+                    <TableCell rowSpan={3} colSpan={3} />
+                    <TableCell colSpan={1}>
+                        <Typography fontSize={{md:20,sm:15,xs:10}}>Subtotal</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                        <Typography fontSize={{md:20,sm:15,xs:10}}>${props.total}</Typography>
+                    </TableCell>
+                </TableRow>
+                <TableRow colSpan={1}>
+                    <TableCell>
+                        <Typography fontSize={{md:20,sm:15,xs:10}}>Envío</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                        <Typography fontSize={{md:20,sm:15,xs:10}}>$600</Typography>
+                    </TableCell>
+                </TableRow>
+                <TableRow sx={{backgroundColor:"#FFB6C1"}}>
+                    <TableCell colSpan={1}>
+                        <Typography fontSize={{md:20,sm:15,xs:10}}>Total</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                        <Typography fontSize={{md:20,sm:15,xs:10}}>${props.total + 600}</Typography>
+                    </TableCell>
+                </TableRow>
             </TableBody>
         </Table>
     </TableContainer>

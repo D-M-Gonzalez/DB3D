@@ -21,11 +21,11 @@ export default function Layout() {
             <Grid item container xs={12}>
                 {smallDevices ? 
                     <Grid item container xs={12} sx={{backgroundColor:"white"}}>
-                        <Grid item container lg={2} md={2.5} sm={1.4} justifyContent="center">
+                        <Grid item container lg={2} md={2.5} sm={1.2} justifyContent="center">
                             <Box component="img" src="/assets/LogoDB3D2Black.png" sx={{height:"8vw", width:"auto"}}/>
                         </Grid>
-                        <Grid item lg={2} md={1.5} sm={0.1}/>
-                        <Grid item container lg={8} md={8} sm={10.5}  alignItems="center">
+                        <Grid item lg={1} md={0.5}/>
+                        <Grid item container lg={9} md={9} sm={10.8}  alignItems="center">
                             <NavBar/>
                         </Grid>
                     </Grid>

@@ -6,7 +6,7 @@ import { customTheme } from '../MuiTheme';
 import { findProducts } from '../controllers/findProducts';
 
 export default function Context(props) {
-    
+
     const theme = useTheme(customTheme)
 	const imageSize = [
 		{

@@ -2,8 +2,8 @@ import React, {useEffect, useRef} from 'react'
 import { useSearchParams} from 'react-router-dom';
 import { Box, Grid, Typography, Paper, TextField, Button, useTheme, useMediaQuery } from '@mui/material';
 import { customTheme } from '../../MuiTheme';
-import fondo4 from '../../img/fondo4.png';
-import fondo5 from '../../img/fondo5.png';
+import fondo4 from '../../img/fondo4.jpg';
+import fondo5 from '../../img/fondo5.jpg';
 
 const background1 = {
 	width:"100vw",

@@ -1,14 +1,29 @@
-import React, {useState,useEffect,useContext} from 'react'
-import { Box, Grid, Typography, Paper, TextField, Button, Backdrop, CircularProgress, useTheme, useMediaQuery } from '@mui/material';
+import React, {useState,useEffect,useContext, useRef} from 'react'
+import { Box, Grid, Typography, Paper, TextField, Button, Backdrop, CircularProgress, useMediaQuery, useTheme} from '@mui/material';
 import CheckoutTable from '../../components/Table/CheckoutTable';
 import { Global } from '../../App';
 import Navigate from '../../modules/Navigator';
 import { useNavigate } from 'react-router-dom';
+import { userDataFields } from '../../data/userDataFields';
+import NewUserForm from '../../components/Form/NewUserForm';
+import { blurSignupValidation, changeSignupValidation, submitValidation } from '../../modules/Validation';
+import { customTheme } from '../../MuiTheme';
+import { findUserById } from '../../controllers/findUserById';
+import { createOrder } from '../../controllers/createOrder';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 export default function Checkout() {
 	const globalData = useContext(Global);
+	const [userData, setUserData] = useState(userDataFields)
 	const [productList, setProductList] = useState({})
+	const [disableFields, setDisableFields] = useState(false)
 	const nav = useNavigate()
+	const theme = useTheme(customTheme)
+	const mediumDevices = useMediaQuery(theme.breakpoints.up('md'))
+	const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
 
 	useEffect(()=>{   
         if(globalData){
@@ -18,15 +33,73 @@ export default function Checkout() {
                 console.log(error)
             }
         }
-		console.log(globalData)
+		if(sessionStorage.getItem("id") && sessionStorage.getItem("token")){
+			getUserData(JSON.parse(sessionStorage.getItem("id")),sessionStorage.getItem("token"))
+			setDisableFields(true)
+		}
     },[globalData])
 
 	const fillProductList = () => {
 		setProductList(globalData)
 	}
 
-	const handleClick = name => (event) => {
-		name.action === "buy" && alert("compraste!, pero todavía no funciona ;)")
+	const getUserData = async (id,token) => {
+		const response = await findUserById(id,token);
+		setUserData({...userData,
+					email:{
+						...userData["email"],
+						data: response.data.email,
+					},
+					repemail:{
+						...userData["repemail"],
+						data: response.data.email,
+					},
+					name:{
+						...userData["name"],
+						data: response.data.name,
+					},
+					surname:{
+						...userData["surname"],
+						data: response.data.surname,
+					},
+					phone:{
+						...userData["phone"],
+						data: response.data.phone,
+					},
+				}
+			)
+		}
+
+	const handleClick = name => async () => {
+		if(name.action === "buy"){
+			const error = submitValidation(userData,setUserData,"checkout")
+			if(!error){
+				MySwal.fire({ //Fires a warning before doing the deletion
+					title: <strong>Confirmar la compra</strong>,
+					html: <i>Una vez confirmada, la orden no se puede modificar</i>,
+					showDenyButton: true,
+					showConfirmButton: true,
+					confirmButtonText: "Si, ¡Comprar!",
+					confirmButtonColor: "darkred",
+					denyButtonText: "No!",
+					denyButtonColor: "forestgreen",
+				  }).then(async (result) => {
+					if (result.isConfirmed) {
+						const response = await createOrder(userData,globalData.cartList,sessionStorage.getItem("token"))
+						console.log(response)
+					  Swal.fire({
+						title: response.message,
+						html: `La id de tu orden es ${response.data.id}`,
+						showConfirmButton: true,
+						confirmButtonColor: "forestgreen",
+					  }).then(async () => {
+						globalData.update({...globalData,cartList:[]});
+						nav(Navigate("ALL"));
+					  });
+					}
+				  });
+			}
+		}
 		if(name.action === "clear"){
 			globalData.update({...globalData,cartList:[]});
 			setProductList({})
@@ -39,6 +112,7 @@ export default function Checkout() {
 			})
 			globalData.update({...globalData,cartList:itemToDelete});
 		}
+		name.action === "item" && nav(`/detail/${name.id}`)
 	}
 
 	const calculateTotal = () => {
@@ -49,6 +123,14 @@ export default function Checkout() {
 		return total
 	}
 
+	const handleChange = (event) => {
+		changeSignupValidation(userData,setUserData,event)
+	}
+
+	const handleBlur = (event) => {
+		blurSignupValidation(userData,setUserData,event)
+	}
+	
     if(Object.keys(productList).length < 1){
 		return (
             <Backdrop
@@ -64,61 +146,64 @@ export default function Checkout() {
 			<Paper sx={{m:5}}>
 				<Grid container>
 					<Grid item container mt={2} xs={12} justifyContent="center">
-						<Typography fontWeight={700} fontSize={{lg:40,md:35,sm:30}}>Checkout</Typography>
+						<Typography fontWeight={700} fontSize={{lg:50,md:45,sm:40}}>Checkout</Typography>
 					</Grid>
 					{productList.cartList.length > 0 ? 
 					<>
 						<Grid item container mt={2} xs={12} justifyContent="center">
-							<CheckoutTable list={productList} handleClick={handleClick}/>
+							<CheckoutTable list={productList} handleClick={handleClick} total={calculateTotal()}/>
 						</Grid>
-						<Grid item xs={8}/>
-						<Grid item container xs={3}>
-							<Paper>
-								<Box
-									display="flex"
-									flexDirection="row"
-									>
-									<Typography ml={1} mr={1} fontSize={{lg:18,md:16,sm:14}}>Total</Typography>
-									<Typography fontWeight={600} fontSize={{lg:18,md:16,sm:14}}>
-										{calculateTotal()}
-									</Typography>
-									<Typography fontWeight={600} fontSize={{lg:18,md:16,sm:14}}>$</Typography>
-								</Box>
-							</Paper>
-						</Grid>
-						<Grid item xs={1}/>
 					</>
 					:
 					<Grid item container xs={12} justifyContent="center" alignItems="center" sx={{height:"200px"}}>
 						<Typography fontSize={{lg:30,md:25,sm:20}}>Oops! Todavía no has agregado ningún producto!</Typography>
 					</Grid>
 				}
+
+					<Grid item container mt={2} ml={{lg:10,md:8,sm:4,xs:1}} xs={12}>
+						<Typography fontWeight={700} fontSize={{lg:40,md:35,sm:30}}>Datos Personales</Typography>
+					</Grid>
+					<Grid item container mt={2} ml={{lg:10,md:8,sm:4,xs:1}} xs={12}>
+						<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Ingresa tus datos para poder continuar</Typography>
+					</Grid>
+					<Grid item container ml={{lg:10,md:8,sm:4,xs:0}} xs={12}>
+						<NewUserForm 
+							userData={userData} 
+							fields={Object.entries(userDataFields).filter((data)=>data[1].mode.indexOf("checkout") !== -1)} 
+							handleBlur={handleBlur} 
+							handleChange={handleChange}
+							disabled={disableFields}
+							/>
+					</Grid>
 					<Grid item container mt={2} mb={2} xs={12}>
 						<Grid item xs/>
-						<Grid item container xs={4} justifyContent="center">
+						<Grid item container md={4} xs={4} justifyContent="center">
 							<Button
 								variant="db3d"
 								onClick={handleClick({action:"buy"})}
 								disabled= {!productList.cartList.length > 0}
+								size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
 								>
-								<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Confirmar compra</Typography>
+								Confirmar compra
 							</Button>
 						</Grid>
-						<Grid item container xs={2} justifyContent="center">
+						<Grid item container md={2} xs={4} justifyContent="center">
 							<Button
 								variant="db3d"
 								onClick={handleClick({action:"back"})}
+								size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
 								>
-								<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Volver</Typography>
+								Volver
 							</Button>
 						</Grid>
-						<Grid item container xs={3} justifyContent="center">
+						<Grid item container md={3} xs={4} justifyContent="center">
 							<Button
 								variant="db3d"
 								onClick={handleClick({action:"clear"})}
 								disabled= {!productList.cartList.length > 0}
+								size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
 								>
-								<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Limpiar lista</Typography>
+								Limpiar lista
 							</Button>
 						</Grid>
 						<Grid item xs/>

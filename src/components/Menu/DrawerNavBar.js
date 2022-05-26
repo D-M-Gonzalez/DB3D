@@ -5,18 +5,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 export default function DrawerNavBar(props) {
 
     const handleClick = name => () => {
+        props.handleDrawer({id:"menu",value:false})
         props.handleClickMenu(name)
     }
 
     return (
         <>
-            <IconButton onClick={props.handleDrawer(true)}>
+            <IconButton id="menu" onClick={() => props.handleDrawer({id:"menu",value:true})}>
                 <MenuIcon sx={{fontSize:30,color:"black"}}/>
             </IconButton>
             <Drawer
                 anchor='left'
-                open={props.openDrawer}
-                onClose={props.handleDrawer(false)}
+                open={props.openDrawer.menu}
+                onClose={() => props.handleDrawer({id:"menu",value:false})}
             >
             {Object.entries(props.menuItems).map((category)=>{
                 return (

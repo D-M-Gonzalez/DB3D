@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect} from 'react'
+import React, {createContext, useState} from 'react'
 import { Routes, Route } from "react-router-dom";
 import ItemDetailContainer from './container/ItemDetailContainer/ItemDetailContainer';
 import ItemList from './container/Item/ItemList';
@@ -9,7 +9,11 @@ import Contact from './container/Contact/Contact';
 import Checkout from './container/Checkout/Checkout';
 import { ThemeProvider } from '@mui/material/styles';
 import { customTheme } from './MuiTheme';
-import { findProducts } from './controllers/findProducts';
+import Signup from './container/Signup/Signup';
+import ModifyUser from './container/ModifyUser/ModifyUser';
+import Login from './container/Login/Login';
+import UserOrderList from './container/UserOrderList/UserOrderList';
+import SingleOrderList from './container/SingleOrderList/SingleOrderList';
 
 export const Global = createContext();
 
@@ -45,6 +49,11 @@ export default function App() {
 						<Route path="detail/:id" element={<ItemDetailContainer/>}/>
 						<Route path="contact" element={<Contact/>}/>
 						<Route path="checkout" element={<Checkout/>}/>
+						<Route path="signup" element={<Signup/>}/>
+						<Route path="login" element={<Login/>}/>
+						<Route path="modifyuser" element={<ModifyUser/>}/>
+						<Route path="userorders/:id" element={<UserOrderList/>}/>
+						<Route path="order/:id" element={<SingleOrderList/>}/>
 					</Route>
 				</Routes>
 			</ThemeProvider>
