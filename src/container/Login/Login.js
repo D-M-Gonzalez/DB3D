@@ -35,17 +35,16 @@ export default function Login() {
 				const userName = JSON.stringify(response.data.name)
 				const userEmail = JSON.stringify(response.data.email)
 				const userToken = JSON.stringify(response.data.accessToken)
-				sessionStorage.setItem("id",userId)
-                sessionStorage.setItem("user",userName)
-				sessionStorage.setItem("email",userEmail)
-                sessionStorage.setItem("token",userToken)
+				localStorage.setItem("id",userId)
+                localStorage.setItem("user",userName)
+				localStorage.setItem("email",userEmail)
+                localStorage.setItem("token",userToken)
                 nav(Navigate("ALL"))
 			} else {
 				MySwal.fire({
 					title: <strong>{response.message}!</strong>,
 					showConfirmButton: true,
 					confirmButtonText: "Okay",
-					confirmButtonColor: "forestgreen",
 				  })          
 			}
         }
@@ -59,7 +58,7 @@ export default function Login() {
 					<Typography fontWeight={700} fontSize={{lg:50,md:40,xs:20}}>Acceder al sitio</Typography>
 				</Grid>
 				<Grid item container mt={10} xs={12} justifyContent="center">
-					<Paper sx={{width:"500px"}} elevation={10}>
+					<Paper elevation={10}>
 						<Grid item container xs={12} mt={3} justifyContent="center">
 							<Typography fontSize={{lg:25,md:20,xs:15}}>Ingresa tus credenciales:</Typography>
 						</Grid>

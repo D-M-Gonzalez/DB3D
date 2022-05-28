@@ -2,7 +2,7 @@ export const userDataFields = {
 	email:{
 		label:"Email",
 		data:"",
-		error:"",
+		error:false,
 		errorText:"",
 		width:350,
 		mode:["register","checkout","login","password"]
@@ -10,7 +10,7 @@ export const userDataFields = {
 	repemail:{
 		label:"Repetir email",
 		data:"",
-		error:"",
+		error:false,
 		errorText:"",
 		width:350,
 		mode:["checkout"]
@@ -18,7 +18,7 @@ export const userDataFields = {
 	oldpassword:{
 		label:"Password anterior",
 		data:"",
-		error:"",
+		error:false,
 		errorText:"",
 		width:250,
 		mode:["password"]		
@@ -26,7 +26,7 @@ export const userDataFields = {
 	password:{
 		label:"Password",
 		data:"",
-		error:"",
+		error:false,
 		errorText:"",
 		width:250,
 		mode:["login","register","password"]		
@@ -34,7 +34,7 @@ export const userDataFields = {
 	reppassword:{
 		label:"Repetir Password",
 		data:"",
-		error:"",
+		error:false,
 		errorText:"",
 		width:250,
 		mode:["register"]		
@@ -42,7 +42,7 @@ export const userDataFields = {
 	name:{
 		label:"Nombre",
 		data:"",
-		error:"",
+		error:false,
 		errorText:"",
         width:250,
 		mode:["register","checkout","modify"]
@@ -50,7 +50,7 @@ export const userDataFields = {
 	surname:{
 		label:"Apellido",
 		data:"",
-		error:"",
+		error:false,
 		errorText:"",
         width:250,
 		mode:["register","checkout","modify"]
@@ -58,7 +58,7 @@ export const userDataFields = {
 	phone:{
 		label:"Teléfono",
 		data:"",
-		error:"",
+		error:false,
 		errorText:"",
         width:200,
 		mode:["register","checkout","modify"]

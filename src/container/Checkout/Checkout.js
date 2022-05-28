@@ -1,5 +1,5 @@
-import React, {useState,useEffect,useContext, useRef} from 'react'
-import { Box, Grid, Typography, Paper, TextField, Button, Backdrop, CircularProgress, useMediaQuery, useTheme} from '@mui/material';
+import React, {useState,useEffect,useContext} from 'react'
+import { Grid, Typography, Paper, Button, Backdrop, CircularProgress, useMediaQuery, useTheme} from '@mui/material';
 import CheckoutTable from '../../components/Table/CheckoutTable';
 import { Global } from '../../App';
 import Navigate from '../../modules/Navigator';
@@ -16,7 +16,7 @@ import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
 
 export default function Checkout() {
-	const globalData = useContext(Global);
+	const {globalData,update} = useContext(Global);
 	const [userData, setUserData] = useState(userDataFields)
 	const [productList, setProductList] = useState({})
 	const [disableFields, setDisableFields] = useState(false)
@@ -33,8 +33,8 @@ export default function Checkout() {
                 console.log(error)
             }
         }
-		if(sessionStorage.getItem("id") && sessionStorage.getItem("token")){
-			getUserData(JSON.parse(sessionStorage.getItem("id")),sessionStorage.getItem("token"))
+		if(localStorage.getItem("id") && localStorage.getItem("token")){
+			getUserData(JSON.parse(localStorage.getItem("id")),localStorage.getItem("token"))
 			setDisableFields(true)
 		}
     },[globalData])
@@ -74,26 +74,25 @@ export default function Checkout() {
 		if(name.action === "buy"){
 			const error = submitValidation(userData,setUserData,"checkout")
 			if(!error){
-				MySwal.fire({ //Fires a warning before doing the deletion
+				MySwal.fire({
 					title: <strong>Confirmar la compra</strong>,
 					html: <i>Una vez confirmada, la orden no se puede modificar</i>,
 					showDenyButton: true,
 					showConfirmButton: true,
 					confirmButtonText: "Si, ¡Comprar!",
-					confirmButtonColor: "darkred",
 					denyButtonText: "No!",
-					denyButtonColor: "forestgreen",
 				  }).then(async (result) => {
 					if (result.isConfirmed) {
-						const response = await createOrder(userData,globalData.cartList,sessionStorage.getItem("token"))
-						console.log(response)
+						const response = await createOrder(userData,globalData.cartList,localStorage.getItem("token"))
 					  Swal.fire({
 						title: response.message,
-						html: `La id de tu orden es ${response.data.id}`,
+						html: `<div>La id de tu orden es ${response.data.id}</div>
+						<div>Puedes verla haciendo click en el siguiente link:</div>
+						<a href="http://localhost:3000/order/${response.data.id}">Link a la orden</a>`,
 						showConfirmButton: true,
-						confirmButtonColor: "forestgreen",
 					  }).then(async () => {
-						globalData.update({...globalData,cartList:[]});
+						update({...globalData,cartList:[]});
+						localStorage.removeItem("items");
 						nav(Navigate("ALL"));
 					  });
 					}
@@ -101,16 +100,41 @@ export default function Checkout() {
 			}
 		}
 		if(name.action === "clear"){
-			globalData.update({...globalData,cartList:[]});
-			setProductList({})
+			MySwal.fire({
+				title: <strong>Limpiar la lista</strong>,
+				html: <i>Se eliminaran todos los items del carrito</i>,
+				showDenyButton: true,
+				showConfirmButton: true,
+				confirmButtonText: "Si, ¡Eliminar!",
+				denyButtonText: "No!",
+			  }).then(async (result) => {
+				if (result.isConfirmed) {
+					update({...globalData,cartList:[]});
+					localStorage.removeItem("items");
+					setProductList({});
+				}
+			  });
 		}
+
 		name.action === "back" && nav(Navigate("ALL"))
+
 		if(name.action === "delete"){
-			let itemToDelete = []
-			globalData.cartList.forEach((item)=>{
-				item.id !== name.id && itemToDelete.push(item)
-			})
-			globalData.update({...globalData,cartList:itemToDelete});
+			MySwal.fire({
+				title: <strong>Limpiar la lista</strong>,
+				html: `<i>Se eliminara ${name.name} del carrito</i>`,
+				showDenyButton: true,
+				showConfirmButton: true,
+				confirmButtonText: "Si, ¡Eliminar!",
+				denyButtonText: "No!",
+			  }).then(async (result) => {
+				if (result.isConfirmed) {
+					let itemToDelete = []
+					globalData.cartList.forEach((item)=>{
+						item.id !== name.id && itemToDelete.push(item)
+					})
+					update({...globalData,cartList:itemToDelete});
+				}
+			  });
 		}
 		name.action === "item" && nav(`/detail/${name.id}`)
 	}

@@ -1,16 +1,16 @@
 import { serverURL } from "../data/server.js";
 
-export async function findUserById(id,token) { //Controlador usado para encontrar todos los items de un usuario
+export async function findUserById(id,token) {
     const requestOptions = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `JWT ${token}` , //token required to validate the user
+        Authorization: `JWT ${token}` ,
       },
     };
-    const response = await fetch( serverURL + `api/users/${id}`, //Pasa la id del usuario por query
+    const response = await fetch( serverURL + `api/users/${id}`,
       requestOptions
     );
     const data = await response.json();
-    return data; //Retorna un objeto que contiene el estado de la transacción, el mensage generado y los datos
+    return data;
 }

@@ -40,7 +40,7 @@ export default function Footer() {
                         alignItems="center"
                         mt={2}
                     >
-                        <Box component="img" src='/assets/ubicacion.png' sx={{height:40}}/>
+                        <Box component="img" src='/assets/ubicacion.jpg' sx={{height:40}}/>
                         <Typography fontSize={{xs:16}}>Villa Lugano, CABA.</Typography>
                     </Box>
                     <Box

@@ -1,9 +1,9 @@
 import { Grid, Typography, Box} from '@mui/material'
 import { useOutletContext } from 'react-router-dom';
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { styled } from '@mui/material/styles';
 
-const HoverPaper = styled(Box)(({theme})=>({
+const HoverPaper = styled(Box)(()=>({
     backgroundColor:"white",
     boxShadow:"1px 1px 2px #888888",
     transition: "transform 0.35s ease-in-out , background-color 0.35s ease-in-out",
@@ -27,7 +27,11 @@ export default function SingleItem(props) {
             <HoverPaper>
                 <Grid item container xs={12} sx={{width:`${200*imageSizeMultiplier}px`}}>
                     <Grid item container xs={12} justifyContent="center">
-                        <Box component="img" src={props.image} sx={{width:`${200*imageSizeMultiplier}px`, height:`${250*imageSizeMultiplier}px`, borderRadius:0}}></Box>
+                        <Box 
+                            component="img" 
+                            src={props.image} 
+                            sx={{width:`${200*imageSizeMultiplier}px`, height:`${250*imageSizeMultiplier}px`, borderRadius:0}}
+                            />
                     </Grid>
                     <Grid container>
                         <Grid item xs={12}/>

@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useRef} from 'react'
-import {Grid, Typography, Box, Divider, useTheme, useMediaQuery} from '@mui/material/';
-import NavBar from '../../components/NavBar/NavBar';
-import { useNavigate, Outlet, useSearchParams, useLocation } from 'react-router-dom';
+import React, {useEffect, useRef} from 'react'
+import {Grid, Box, Divider, useTheme, useMediaQuery} from '@mui/material/';
+import NavBar from '../NavBar/NavBar';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Context from '../../store/Context';
 import Footer from '../Footer/Footer';
 

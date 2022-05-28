@@ -1,15 +1,20 @@
 import React, {useState,useEffect} from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { Grid, Paper, Backdrop, CircularProgress } from '@mui/material';
-import { findOrderById } from '../../controllers/findOrderById';
-import OrderTable from '../../components/Table/OrderTable';
+import { Grid, Paper, Backdrop, CircularProgress, Typography } from '@mui/material';
 import { findUserById } from '../../controllers/findUserById';
 import UserOrderTable from '../../components/Table/UserOrderTable';
 import fondo5 from '../../img/fondo5.jpg';
 
 const background1 = {
 	width:"100vw",
-	height:"800px",
+	minHeight:"800px",
+	backgroundImage:`url(${fondo5})`,
+	backgroundSize:"cover",
+}
+
+const background2 = {
+	width:"100vw",
+	minHeight:"1200px",
 	backgroundImage:`url(${fondo5})`,
 	backgroundSize:"cover",
 }
@@ -24,15 +29,15 @@ export default function UserOrderList() {
     },[])
 
 	const fillProductList = async () => {
-        const response = await findUserById(params.id,sessionStorage.getItem("token"))
-		setOrderList(response.data.orders)
+        const response = await findUserById(params.id,localStorage.getItem("token"))
+		setOrderList(response)
 	}
 
     const handleClick = name => async () => {
         name.action === "order" && nav(`/order/${name.id}`)
     }
 	
-    if(Object.keys(orderList).length < 1){
+    if(!orderList){
 		return (
             <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -41,13 +46,25 @@ export default function UserOrderList() {
             <CircularProgress color="inherit" />
           </Backdrop>			
 		)
-	} else {
+	} else if(orderList && orderList.status !== 200) {
+        return (
+        <div style={background2}>
+            <Grid container>
+                <Grid item container xs={12} sx={{height:1000}} justifyContent="center" alignItems="center">
+                    <Paper sx={{borderRadius:"20px"}}>
+                        <Typography fontSize={80} m={5} fontWeight={700}>¡El Item que estas buscando no existe!</Typography>
+                    </Paper>
+                </Grid>
+            </Grid>
+        </div>
+        )
+    } else {
   	return (
         <>
             <div style={background1}>
                 <Grid container mt={2} mb={2} justifyContent="center">
                     <Grid item container mt={2} xs={12} justifyContent="center">
-                        <UserOrderTable list={orderList} handleClick={handleClick}/>
+                        <UserOrderTable list={orderList.data.orders} handleClick={handleClick}/>
                     </Grid>
                 </Grid>
             </div>

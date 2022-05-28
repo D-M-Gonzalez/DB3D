@@ -26,8 +26,8 @@ export default function ModifyUser() {
 	const nav = useNavigate()
 
 	useEffect(()=>{
-		if(sessionStorage.getItem("id") && sessionStorage.getItem("token")){
-			getUserData(JSON.parse(sessionStorage.getItem("id")),sessionStorage.getItem("token"))
+		if(localStorage.getItem("id") && localStorage.getItem("token")){
+			getUserData(JSON.parse(localStorage.getItem("id")),localStorage.getItem("token"))
 			setDisableFields(false)
 		}
 	},[])
@@ -63,13 +63,12 @@ export default function ModifyUser() {
 		if(name.action === "accept"){
 			const error = submitValidation(userData,setUserData,"modify")
 			if(!error){
-				const response = await modifyUser(userData,JSON.parse(sessionStorage.getItem("id")),sessionStorage.getItem("token"));
+				const response = await modifyUser(userData,JSON.parse(localStorage.getItem("id")),localStorage.getItem("token"));
 				if(response.status === 200){
 					MySwal.fire({
 						title: <strong>{response.message}!</strong>,
 						showConfirmButton: true,
 						confirmButtonText: "Okay",
-						confirmButtonColor: "forestgreen",
 					  }).then(async () => {
 						  nav(Navigate("ALL"))
 					  })
@@ -78,7 +77,6 @@ export default function ModifyUser() {
 						title: <strong>{response.message}!</strong>,
 						showConfirmButton: true,
 						confirmButtonText: "Okay",
-						confirmButtonColor: "forestgreen",
 					})
 				}
 			}

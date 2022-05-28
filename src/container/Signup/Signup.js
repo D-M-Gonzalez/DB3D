@@ -43,7 +43,6 @@ export default function Register() {
 						title: <strong>{response.message}!</strong>,
 						showConfirmButton: true,
 						confirmButtonText: "Okay",
-						confirmButtonColor: "forestgreen",
 					  })  
 				}
 			}

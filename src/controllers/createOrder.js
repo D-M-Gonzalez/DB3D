@@ -1,11 +1,12 @@
 import { serverURL } from "../data/server";
 
-export async function createOrder(input,products,token) { //Controlador utilizado para crear un nuevo usuario
+export async function createOrder(input,products,token) {
+    const auth = token && `JWT ${token}`
     const requestOptions = {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `JWT ${token}` , //token required to validate the user
+            Authorization: auth ,
         },
         body: JSON.stringify({
             email: input.email.data,
@@ -16,9 +17,9 @@ export async function createOrder(input,products,token) { //Controlador utilizad
             products: products,
         }),
     };
-    const response = await fetch( serverURL + `api/orders/`, //Pasa la id del usuario por query
+    const response = await fetch( serverURL + `api/orders/`,
     requestOptions
     );
     const data = await response.json();
-    return data; //Retorna un objeto que contiene el estado de la transacción, el mensage generado y los datos
+    return data;
   }

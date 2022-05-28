@@ -28,7 +28,7 @@ export default function DrawerUser(props) {
                 <Box>
                     <Typography fontSize={18} m={1}>{props.name}</Typography>
                     <Divider/>
-                    { sessionStorage.getItem("id") ? 
+                    { localStorage.getItem("id") ? 
                         <>
                             <MenuItem onClick={handleClick("modifyuser")} sx={{fontFamily:"Chakra Petch"}}>Modificar mis Datos</MenuItem>
                             <MenuItem onClick={handleClick("userorders")} sx={{fontFamily:"Chakra Petch"}}>Mis ordenes</MenuItem>

@@ -5,9 +5,17 @@ import DetailItem from '../../components/Item/DetailItem';
 import { Global } from '../../App';
 import Navigate from '../../modules/Navigator';
 import { findProductById } from '../../controllers/findProductById';
+import fondo5 from '../../img/fondo5.jpg';
+
+const background1 = {
+	width:"100vw",
+	height:"1200px",
+	backgroundImage:`url(${fondo5})`,
+	backgroundSize:"cover",
+}
 
 export default function ItemDetailContainer() {
-    const globalData = useContext(Global);
+    const {globalData,update} = useContext(Global);
     const [searchedItem, setSearchedItem] = useState();
     const [cant, setCant] = useState(1);
     const [bought, setBought] = useState(false);
@@ -47,7 +55,7 @@ export default function ItemDetailContainer() {
                 name:searchedItem.data.name,
                 price:searchedItem.data.price,
             })
-            globalData.update({...globalData,cartList:cartArray});
+            update({...globalData,cartList:cartArray});
         }
         setBought(true)
     }
@@ -62,7 +70,19 @@ export default function ItemDetailContainer() {
             <CircularProgress color="inherit" />
           </Backdrop>			
 		)
-	} else {
+	} else if(searchedItem && searchedItem.status !== 200) {
+        return(
+        <div style={background1}>
+            <Grid container>
+                <Grid item container xs={12} sx={{height:1000}} justifyContent="center" alignItems="center">
+                    <Paper sx={{borderRadius:"20px"}}>
+                        <Typography fontSize={80} m={5} fontWeight={700}>¡El Item que estas buscando no existe!</Typography>
+                    </Paper>
+                </Grid>
+            </Grid>
+        </div>
+        )
+    } else {
         return (
             <Grid container mt={3} mb={3}>
                 <Grid item container xs={12} mb={3} justifyContent="center">

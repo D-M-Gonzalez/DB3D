@@ -1,7 +1,6 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Outlet, useSearchParams, useLocation } from 'react-router-dom';
 import {useMediaQuery, useTheme} from '@mui/material/';
-import { Global } from '../App';
 import { customTheme } from '../MuiTheme';
 import { findProducts } from '../controllers/findProducts';
 
@@ -36,7 +35,6 @@ export default function Context(props) {
         page:1,
         size:10,
     })
-    const globalData = useContext(Global);
     const [searchParams, setSearchParams] = useSearchParams()
     const URL = useLocation();
 
@@ -59,7 +57,8 @@ export default function Context(props) {
         const category = searchParams.get("category")
         const subcategory = searchParams.get("subcategory")
         const search = searchParams.get("search")
-        const response = await findProducts(page,size,category,subcategory,search)
+        const sort = searchParams.get("sort")
+        const response = await findProducts(page,size,category,subcategory,search,sort)
 
         setPagination({
             page:page,

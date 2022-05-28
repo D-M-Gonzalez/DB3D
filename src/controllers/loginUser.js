@@ -1,10 +1,10 @@
 import { serverURL } from "../data/server";
 
-export async function logInUser(input) { //Controlador utilizado para loguear
+export async function logInUser(input) {
     const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ //Ambos datos necesarios son pasados dentro del body
+        body: JSON.stringify({
             email: input.email.data,
             password: input.password.data,
         }),
@@ -14,5 +14,5 @@ export async function logInUser(input) { //Controlador utilizado para loguear
         requestOptions
     );
     const data = await response.json();
-    return data; //Retorna un objeto que contiene el estado de la transacción, el mensage generado y los datos
+    return data;
 }

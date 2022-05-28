@@ -1,11 +1,11 @@
 import { serverURL } from "../data/server";
 
-export async function modifyUser(input,id,token) { //Controlador utilizado para crear un nuevo usuario
+export async function modifyUser(input,id,token) {
     const requestOptions = {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `JWT ${token}` , //token required to validate the user
+            Authorization: `JWT ${token}` ,
         },
         body: JSON.stringify({
             name: input.name.data,
@@ -13,9 +13,9 @@ export async function modifyUser(input,id,token) { //Controlador utilizado para 
             phone: input.phone.data,
         }),
     };
-    const response = await fetch( serverURL + `api/users/${id}`, //Pasa la id del usuario por query
+    const response = await fetch( serverURL + `api/users/${id}`,
     requestOptions
     );
     const data = await response.json();
-    return data; //Retorna un objeto que contiene el estado de la transacción, el mensage generado y los datos
+    return data;
   }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useOutletContext } from 'react-router-dom';
 import { Box, TextField } from '@mui/material';
+
 export default function NewUserForm(props) {
     const {imageSizeMultiplier} = useOutletContext();
 
@@ -10,13 +11,12 @@ export default function NewUserForm(props) {
             flexDirection="column"
             m={{md:3,xs:1}}
             >
-            {props.fields.map((field)=>{
+            {props.fields.map((field,index)=>{
                 return 	(
-                <>
                     <TextField
                         key={field[0]}
                         id={field[0]}
-                        type={field[0].includes('password') && 'password'}
+                        type={field[0].includes('password') ? 'password' : 'text'}
                         variant='outlined'
                         label={field[1].label}
                         error={props.userData[field[0]].error}
@@ -28,7 +28,6 @@ export default function NewUserForm(props) {
                         onChange={props.handleChange}
                         sx={{mt:2,width:`${field[1].width*(Math.pow(imageSizeMultiplier,3)+0.3)}px`}}
                     />
-                </>
                 )
             })}
         </Box>

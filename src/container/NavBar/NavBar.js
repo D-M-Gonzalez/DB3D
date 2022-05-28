@@ -1,20 +1,20 @@
 import React, {useState, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {Grid, Box, AppBar, Toolbar, useMediaQuery, useTheme} from '@mui/material';
-import MenuNavBar from '../Menu/MenuNavBar';
-import CartWidget from '../Buttons/CartWidget';
+import MenuNavBar from '../../components/Menu/MenuNavBar';
+import CartWidget from '../../components/Buttons/CartWidget';
 import Navigator from '../../modules/Navigator';
-import DrawerNavBar from '../Menu/DrawerNavBar';
+import DrawerNavBar from '../../components/Menu/DrawerNavBar';
 import { menuCategories } from '../../data/menuCategories';
 import { customTheme } from '../../MuiTheme';
-import DrawerUser from '../Menu/DrawerUser';
+import DrawerUser from '../../components/Menu/DrawerUser';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Global } from '../../App';
 
 const MySwal = withReactContent(Swal);
 
-export default function NavBar(props) {
+export default function NavBar() {
     const globalData = useContext(Global);
     const [anchorMenu, setAnchorMenu] = useState(null);
     const [openMenu, setOpenMenu] = useState(false);
@@ -29,25 +29,28 @@ export default function NavBar(props) {
     const nav = useNavigate();
 
     const handleClick = (event) => {
-        setAnchorMenu(event.currentTarget);
-        event.currentTarget.id && setOpenMenu(event.currentTarget.id);
+        if(event.currentTarget.id === "checkout"){
+            nav(Navigator(event.currentTarget.id))
+        } else {
+            setAnchorMenu(event.currentTarget);
+            event.currentTarget.id && setOpenMenu(event.currentTarget.id);
+        }
     };
+
     const handleClose = (event) => {
         event.type === 'click' && setOpenMenu("")
     };
     const handleClickMenu = (name) => {
         if(name === "logout"){
-            MySwal.fire({ //Fires a warning before doing the deletion
+            MySwal.fire({
                 title: "¿Estas seguro que quieres salir?",
                 showDenyButton: true,
                 showConfirmButton: true,
                 confirmButtonText: "Salir",
-                confirmButtonColor: "darkred",
                 denyButtonText: "Cancelar",
-                denyButtonColor: "forestgreen",
               }).then(async (result) => {
                 if (result.isConfirmed) {
-                    sessionStorage.clear()
+                    localStorage.clear()
                     nav(Navigator("NOSOTROS"))
                     globalData.update({...globalData,cartList:[]});
                 }
@@ -116,7 +119,7 @@ export default function NavBar(props) {
                     <Grid item container lg={2.5} md={2.5} sm={3} xs={6}>
                         <CartWidget 
                             size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
-                            handleClick={handleClickMenu}
+                            handleClick={handleClick}
                             /> 
                     </Grid>
                     <Grid item container lg={2} md={2} sm={2} xs={3}>
@@ -125,7 +128,7 @@ export default function NavBar(props) {
                             openDrawer={openDrawer} 
                             handleClickMenu={handleClickMenu} 
                             menuItems={menuCategories} 
-                            name={JSON.parse(sessionStorage.getItem("user"))}
+                            name={JSON.parse(localStorage.getItem("user"))}
                             size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
                             />
                     </Grid>

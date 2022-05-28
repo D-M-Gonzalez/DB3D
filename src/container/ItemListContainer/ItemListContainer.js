@@ -40,6 +40,21 @@ export default function ItemListContainer() {
 		setExpanded(label)
 	}
 
+	const handleClick = (expanded,id) => (event) => {
+        const name = event.currentTarget.id.split("+")
+        if(name[0] === "category"){
+            if(expanded === id){
+                setSearchParams({...Object.fromEntries([...searchParams]),category:"ALL",subcategory:"ALL"})
+                handleExpanded("none")
+            } else {
+                setSearchParams({...Object.fromEntries([...searchParams]),category:name[1]})
+                handleExpanded(name[1])
+            }
+        }
+        name[0] === "subcategory" && setSearchParams({...Object.fromEntries([...searchParams]),subcategory:name[1]})
+    }
+
+
 	if(!filteredItems){
 		return (
             <Backdrop
@@ -73,7 +88,15 @@ export default function ItemListContainer() {
 						<SearchForm/>
 						{Object.entries(itemCategories).map((category)=>{
 							return (
-								<FilterAccordion key={category[1].id} id={category[1].id} label={category[1].label} subcategories={category[1].subcategories} expanded={expanded} checkExpanded={handleExpanded}/>
+								<FilterAccordion 
+									key={category[1].id} 
+									id={category[1].id} 
+									label={category[1].label} 
+									subcategories={category[1].subcategories} 
+									expanded={expanded} 
+									checkExpanded={handleExpanded}
+									handleClick={handleClick}
+								/>
 							)
 						})}
 						<Divider style={{width:'100%'}} />

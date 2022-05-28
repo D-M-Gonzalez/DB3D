@@ -37,6 +37,7 @@ export default function CheckoutTable(props) {
                                 onClick={props.handleClick({
                                     id:cartItem.id,
                                     action:"item",
+                                    name:cartItem.name,
                                 })}
                                 >
                                 <Typography fontSize={{md:20,sm:15,xs:10}}>{cartItem.name}</Typography>
@@ -57,6 +58,7 @@ export default function CheckoutTable(props) {
                                 onClick={props.handleClick({
                                     id:cartItem.id,
                                     action:"delete",
+                                    name:cartItem.name,
                                 })}
                                 >
                             <Typography fontWeight={700} fontSize={{md:20,sm:15,xs:10}}>X</Typography>

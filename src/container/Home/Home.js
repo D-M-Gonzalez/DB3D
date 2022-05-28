@@ -1,8 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import { useSearchParams, useOutletContext} from 'react-router-dom';
-import { Box, Typography, useMediaQuery, useTheme, Paper } from '@mui/material';
-import Reveal from 'react-awesome-reveal'
-import { keyframes } from "@emotion/react";
+import { Box } from '@mui/material';
 import HomeUs from './Sub/HomeUs';
 import HomeGear from './Sub/HomeGear';
 import HomeProducts from './Sub/HomeProducts';
