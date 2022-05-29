@@ -15,6 +15,7 @@ import Login from './container/Login/Login';
 import UserOrderList from './container/UserOrderList/UserOrderList';
 import SingleOrderList from './container/SingleOrderList/SingleOrderList';
 import Error404 from './container/Error404/Error404';
+import './swal.css';
 
 export const Global = createContext();
 
