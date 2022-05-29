@@ -72,7 +72,7 @@ export default function CheckoutTable(props) {
                         <Typography fontSize={{md:20,sm:15,xs:10}}>Subtotal</Typography>
                     </TableCell>
                     <TableCell align="right">
-                        <Typography fontSize={{md:20,sm:15,xs:10}}>${props.total}</Typography>
+                        <Typography fontSize={{md:20,sm:15,xs:10}}>${props.list.totalPrice}</Typography>
                     </TableCell>
                 </TableRow>
                 <TableRow colSpan={1}>
@@ -88,7 +88,7 @@ export default function CheckoutTable(props) {
                         <Typography fontSize={{md:20,sm:15,xs:10}}>Total</Typography>
                     </TableCell>
                     <TableCell align="right">
-                        <Typography fontSize={{md:20,sm:15,xs:10}}>${props.total + 600}</Typography>
+                        <Typography fontSize={{md:20,sm:15,xs:10}}>${props.list.totalPrice + 600}</Typography>
                     </TableCell>
                 </TableRow>
             </TableBody>

@@ -36,6 +36,12 @@ export default function Context(props) {
         size:10,
     })
     const [searchParams, setSearchParams] = useSearchParams()
+    const [globalData, setGlobalData] = useState({
+		cartList:[],
+		totalItems: 0,
+        totalPrice: 0,
+		update: (data) => updateGlobal(data),
+	})
     const URL = useLocation();
 
     useEffect(()=>{
@@ -46,10 +52,39 @@ export default function Context(props) {
 	},[JSON.stringify(imageSize)])
 
     useEffect(()=>{
+        setStore(null)
         if ( URL.pathname === '/items/list' ){
             filterItems()
         }
     },[searchParams])
+
+    useEffect(()=>{
+		localStorage.getItem("items") && startGlobalData();
+	},[])
+
+	useEffect(()=>{
+		globalData.cartList.length > 0 && updateLocalStorage(globalData)
+	},[globalData])
+
+    const updateGlobal = (data) => {
+		let cant = 0;
+        let price = 0;
+		data.cartList.forEach((item)=>{
+			cant = cant + Number(item.cant)
+            price = price + Number(item.price) * item.cant
+		})
+		setGlobalData({...data,totalItems:cant,totalPrice:price})
+        props.totalItems(cant)
+	}
+
+	const updateLocalStorage = (data) => {
+		localStorage.removeItem("items")
+		localStorage.setItem("items",JSON.stringify(data))
+	}
+
+	const startGlobalData = () => {
+		updateGlobal(JSON.parse(localStorage.getItem("items")))
+	}
 
     const filterItems = async () => {
         const page = searchParams.get("page")
@@ -71,12 +106,14 @@ export default function Context(props) {
 
     return (
         <Outlet context={{
-            loadStore:store,
-            page:pagination.page,
-            total:pagination.total,
-            size:pagination.size,
-            ref:props.layoutRef,
-            imageSizeMultiplier:size,
+            loadStore: store,
+            page: pagination.page,
+            total: pagination.total,
+            size: pagination.size,
+            ref: props.layoutRef,
+            imageSizeMultiplier: size,
+            globalData: globalData,
+            update: updateGlobal,
         }}/>
     )
 }

@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {Grid, Box, AppBar, Toolbar, useMediaQuery, useTheme} from '@mui/material';
 import MenuNavBar from '../../components/Menu/MenuNavBar';
@@ -10,12 +10,10 @@ import { customTheme } from '../../MuiTheme';
 import DrawerUser from '../../components/Menu/DrawerUser';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { Global } from '../../App';
 
 const MySwal = withReactContent(Swal);
 
-export default function NavBar() {
-    const globalData = useContext(Global);
+export default function NavBar(props) {
     const [anchorMenu, setAnchorMenu] = useState(null);
     const [openMenu, setOpenMenu] = useState(false);
     const [openDrawer, setOpenDrawer] = useState({
@@ -50,9 +48,11 @@ export default function NavBar() {
                 denyButtonText: "Cancelar",
               }).then(async (result) => {
                 if (result.isConfirmed) {
-                    localStorage.clear()
+                    localStorage.removeItem("id")
+                    localStorage.removeItem("user")
+                    localStorage.removeItem("email")
+                    localStorage.removeItem("token")
                     nav(Navigator("NOSOTROS"))
-                    globalData.update({...globalData,cartList:[]});
                 }
               });
         } else {
@@ -120,6 +120,7 @@ export default function NavBar() {
                         <CartWidget 
                             size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
                             handleClick={handleClick}
+                            totalItems={props.totalItems}
                             /> 
                     </Grid>
                     <Grid item container lg={2} md={2} sm={2} xs={3}>

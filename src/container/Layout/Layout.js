@@ -1,19 +1,21 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {Grid, Box, Divider, useTheme, useMediaQuery} from '@mui/material/';
 import NavBar from '../NavBar/NavBar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Context from '../../store/Context';
 import Footer from '../Footer/Footer';
+import Navigate from '../../modules/Navigator';
 
 export default function Layout() {
+    const [totalItems, setTotalItems] = useState()
     const theme = useTheme()
     const smallDevices = useMediaQuery(theme.breakpoints.up('sm'))
     const location = useLocation()
-    const navigate = useNavigate()
+    const nav = useNavigate()
     const layoutRef = useRef()
 
     useEffect(()=>{
-        location.pathname === '/' && navigate('/home?section=us')
+        location.pathname === '/' && nav(Navigate("ALL"))
     },[])
 
     return (
@@ -26,12 +28,12 @@ export default function Layout() {
                         </Grid>
                         <Grid item lg={1} md={0.5}/>
                         <Grid item container lg={9} md={9} sm={10.8}  alignItems="center">
-                            <NavBar/>
+                            <NavBar totalItems={totalItems}/>
                         </Grid>
                     </Grid>
                 :
                 <Grid item container xs={12}>
-                    <NavBar/>
+                    <NavBar totalItems={totalItems}/>
                 </Grid>              
             }
             </Grid>
@@ -39,7 +41,7 @@ export default function Layout() {
                 <Divider/>
             </Grid>
             <Grid item container xs={12} justifyContent="center">
-                <Context layoutRef={layoutRef}/>
+                <Context layoutRef={layoutRef} totalItems={setTotalItems}/>
             </Grid>
             <Grid item xs={12}>
                 <Divider/>

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Grid,Backdrop, CircularProgress,Box, Divider, Pagination} from '@mui/material/';
+import {Grid, Box, Divider, Pagination} from '@mui/material/';
 import ItemList from '../Item/ItemList';
 import { useOutletContext, useNavigate, useSearchParams} from 'react-router-dom';
 import FilterMenu from '../../components/Menu/FilterMenu';
@@ -8,8 +8,7 @@ import { itemCategories } from '../../data/itemCategories';
 import SearchForm from '../../components/SearchForm/SearchForm';
 
 export default function ItemListContainer() {
-  	const {loadStore,page,total,size} = useOutletContext();
-	const [filteredItems, setFilteredItems] = useState();
+  	const {page,total,size} = useOutletContext();
 	const [expanded, setExpanded] = useState();
 	const [searchParams, setSearchParams] = useSearchParams({
 		page: 1,
@@ -18,15 +17,8 @@ export default function ItemListContainer() {
 	const nav = useNavigate();
 
 	useEffect(()=>{
-		if(loadStore){
-			try{
-				setFilteredItems(loadStore)
-				setExpanded(searchParams.get("category").toLowerCase())
-			} catch(error){
-				console.log(error)
-			}
-		}
-	},[loadStore])
+		setExpanded(searchParams.get("category").toLowerCase())
+	},[page])
 
 	const showDetail = (id) => {
 		nav(`/detail/${id}`)
@@ -54,17 +46,6 @@ export default function ItemListContainer() {
         name[0] === "subcategory" && setSearchParams({...Object.fromEntries([...searchParams]),subcategory:name[1]})
     }
 
-
-	if(!filteredItems){
-		return (
-            <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-			open={true}
-          	>
-            <CircularProgress color="inherit" />
-          </Backdrop>			
-		)
-	} else {
 		return (
 		  	<Grid container sx={{backgroundColor:"white"}}>
 			  	<Grid item container mt={1} mb={1} xs={12} sx={{height:40}} alignItems="center">
@@ -104,10 +85,9 @@ export default function ItemListContainer() {
 				</Grid>
 				<Divider orientation="vertical" flexItem />
 				<Grid item container pt={2} pb={2} sm={8.95} xs={11.95} justifyContent="center" sx={{backgroundColor:"rgb(240, 240, 240)"}}>
-					<ItemList items={filteredItems.items} detail={showDetail}/>
+					<ItemList detail={showDetail}/>
 					<Pagination count={Math.trunc(total/size)+1} page={Number(page)} onChange={handleChange} siblingCount={1} boundaryCount={1}/>
 				</Grid>
 			</Grid>
 		)
 	}
-}

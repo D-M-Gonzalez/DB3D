@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from 'react'
+import React, {createContext } from 'react'
 import { Routes, Route } from "react-router-dom";
 import ItemDetailContainer from './container/ItemDetailContainer/ItemDetailContainer';
 import ItemList from './container/Item/ItemList';
@@ -14,43 +14,13 @@ import ModifyUser from './container/ModifyUser/ModifyUser';
 import Login from './container/Login/Login';
 import UserOrderList from './container/UserOrderList/UserOrderList';
 import SingleOrderList from './container/SingleOrderList/SingleOrderList';
+import Error404 from './container/Error404/Error404';
 
 export const Global = createContext();
 
 export default function App() {
-	const [globalData, setGlobalData] = useState({
-		cartList:[],
-		totalItems: 0,
-		update: (data) => updateGlobal(data),
-	})
-
-	useEffect(()=>{
-		localStorage.getItem("items") && startGlobalData();
-	},[])
-
-	useEffect(()=>{
-		globalData.cartList.length > 0 && updateLocalStorage(globalData)
-	},[globalData])
-	
-	const updateGlobal = (data) => {
-		let cant = 0;
-		data.cartList.forEach((item)=>{
-			cant = cant + Number(item.cant)
-		})
-		setGlobalData({...data,totalItems:cant})
-	}
-
-	const updateLocalStorage = (data) => {
-		localStorage.removeItem("items")
-		localStorage.setItem("items",JSON.stringify(data))
-	}
-
-	const startGlobalData = () => {
-		updateGlobal(JSON.parse(localStorage.getItem("items")))
-	}
 
   	return (
-		<Global.Provider value={{globalData:globalData,update:updateGlobal}}>
 			<ThemeProvider theme={customTheme}>
 				<Routes>
 					<Route path="/" element={<Layout/>}>
@@ -66,9 +36,9 @@ export default function App() {
 						<Route path="modifyuser" element={<ModifyUser/>}/>
 						<Route path="userorders/:id" element={<UserOrderList/>}/>
 						<Route path="order/:id" element={<SingleOrderList/>}/>
+						<Route path="*" element={<Error404/>}/>
 					</Route>
 				</Routes>
 			</ThemeProvider>
-		</Global.Provider>
 	)
 }

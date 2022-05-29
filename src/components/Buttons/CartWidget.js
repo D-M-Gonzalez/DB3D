@@ -1,10 +1,8 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import { Box, Button } from '@mui/material'
 import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
-import { Global } from '../../App';
 
 export default function CartWidget(props) {
-	const {globalData} = useContext(Global);
 
   	return (
 		  <>
@@ -12,7 +10,7 @@ export default function CartWidget(props) {
 				id='checkout'
 				variant='db3d'
 				onClick={props.handleClick}
-				disabled={!globalData.totalItems}
+				disabled={!props.totalItems}
 				size={props.size}
 				>
 				<Box
@@ -21,8 +19,8 @@ export default function CartWidget(props) {
 					alignItems="center"
 					overflow="hidden"
 				>
-					<ShoppingCartSharpIcon fontSize={props.size} sx={{color:`${globalData.totalItems ? "black" : "gray"}`}}/>
-					{globalData.totalItems ? "(" + globalData.totalItems + " items)" : "(vacío)" }
+					<ShoppingCartSharpIcon fontSize={props.size} sx={{color:`${props.totalItems ? "black" : "gray"}`}}/>
+					{props.totalItems ? "(" + props.totalItems + " items)" : "(vacío)" }
 				</Box>
 			</Button>
 		  </>

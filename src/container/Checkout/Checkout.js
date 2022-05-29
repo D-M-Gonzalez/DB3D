@@ -1,9 +1,8 @@
-import React, {useState,useEffect,useContext} from 'react'
+import React, {useState,useEffect} from 'react'
 import { Grid, Typography, Paper, Button, Backdrop, CircularProgress, useMediaQuery, useTheme} from '@mui/material';
 import CheckoutTable from '../../components/Table/CheckoutTable';
-import { Global } from '../../App';
 import Navigate from '../../modules/Navigator';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { userDataFields } from '../../data/userDataFields';
 import NewUserForm from '../../components/Form/NewUserForm';
 import { blurSignupValidation, changeSignupValidation, submitValidation } from '../../modules/Validation';
@@ -16,9 +15,8 @@ import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
 
 export default function Checkout() {
-	const {globalData,update} = useContext(Global);
+	const {globalData,update} = useOutletContext();
 	const [userData, setUserData] = useState(userDataFields)
-	const [productList, setProductList] = useState({})
 	const [disableFields, setDisableFields] = useState(false)
 	const nav = useNavigate()
 	const theme = useTheme(customTheme)
@@ -26,22 +24,11 @@ export default function Checkout() {
 	const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
 
 	useEffect(()=>{   
-        if(globalData){
-            try{
-                fillProductList()        
-            } catch (error){
-                console.log(error)
-            }
-        }
 		if(localStorage.getItem("id") && localStorage.getItem("token")){
 			getUserData(JSON.parse(localStorage.getItem("id")),localStorage.getItem("token"))
 			setDisableFields(true)
 		}
     },[globalData])
-
-	const fillProductList = () => {
-		setProductList(globalData)
-	}
 
 	const getUserData = async (id,token) => {
 		const response = await findUserById(id,token);
@@ -90,7 +77,7 @@ export default function Checkout() {
 						<div>Puedes verla haciendo click en el siguiente link:</div>
 						<a href="http://localhost:3000/order/${response.data.id}">Link a la orden</a>`,
 						showConfirmButton: true,
-					  }).then(async () => {
+					  }).then(() => {
 						update({...globalData,cartList:[]});
 						localStorage.removeItem("items");
 						nav(Navigate("ALL"));
@@ -111,7 +98,6 @@ export default function Checkout() {
 				if (result.isConfirmed) {
 					update({...globalData,cartList:[]});
 					localStorage.removeItem("items");
-					setProductList({});
 				}
 			  });
 		}
@@ -120,7 +106,7 @@ export default function Checkout() {
 
 		if(name.action === "delete"){
 			MySwal.fire({
-				title: <strong>Limpiar la lista</strong>,
+				title: <strong>Eliminar item</strong>,
 				html: `<i>Se eliminara ${name.name} del carrito</i>`,
 				showDenyButton: true,
 				showConfirmButton: true,
@@ -139,14 +125,6 @@ export default function Checkout() {
 		name.action === "item" && nav(`/detail/${name.id}`)
 	}
 
-	const calculateTotal = () => {
-		let total = 0;
-		Array.from(productList.cartList).forEach((product)=>{
-			total = total + (product.price * product.cant)
-		})
-		return total
-	}
-
 	const handleChange = (event) => {
 		changeSignupValidation(userData,setUserData,event)
 	}
@@ -155,7 +133,7 @@ export default function Checkout() {
 		blurSignupValidation(userData,setUserData,event)
 	}
 	
-    if(Object.keys(productList).length < 1){
+    if(Object.keys(globalData).length < 1){
 		return (
             <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -172,10 +150,13 @@ export default function Checkout() {
 					<Grid item container mt={2} xs={12} justifyContent="center">
 						<Typography fontWeight={700} fontSize={{lg:50,md:45,sm:40}}>Checkout</Typography>
 					</Grid>
-					{productList.cartList.length > 0 ? 
+					{globalData.cartList.length > 0 ? 
 					<>
 						<Grid item container mt={2} xs={12} justifyContent="center">
-							<CheckoutTable list={productList} handleClick={handleClick} total={calculateTotal()}/>
+							<CheckoutTable 
+								list={globalData} 
+								handleClick={handleClick} 
+								/>
 						</Grid>
 					</>
 					:
@@ -205,7 +186,7 @@ export default function Checkout() {
 							<Button
 								variant="db3d"
 								onClick={handleClick({action:"buy"})}
-								disabled= {!productList.cartList.length > 0}
+								disabled= {!globalData.cartList.length > 0}
 								size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
 								>
 								Confirmar compra
@@ -224,7 +205,7 @@ export default function Checkout() {
 							<Button
 								variant="db3d"
 								onClick={handleClick({action:"clear"})}
-								disabled= {!productList.cartList.length > 0}
+								disabled= {!globalData.cartList.length > 0}
 								size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
 								>
 								Limpiar lista
