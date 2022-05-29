@@ -5,6 +5,7 @@ import React from 'react'
 
 export default function DetailItem(props) {
 	const {imageSizeMultiplier} = useOutletContext();
+	console.log(props)
 
 	if(!props.item){
 		return (
@@ -55,7 +56,10 @@ export default function DetailItem(props) {
 							<Typography fontSize={20} fontWeight={600} ml={2} mr={2} mt={1}>{props.item.data.name}</Typography>
 						</Grid>
 						<Grid container item xs={12} justifyContent="center">
-							<Typography fontSize={16} ml={2} mr={2} mt={1}>{props.item.data.description}</Typography>
+							<Typography fontSize={16} ml={2} mr={2} mt={1}>{props.item.data.description1}</Typography>
+						</Grid>
+						<Grid container item xs={12} justifyContent="center">
+							<Typography fontSize={16} ml={2} mr={2} mt={1}>{props.item.data.description2}</Typography>
 						</Grid>
 						<Grid container item xs={12} justifyContent="center">
 							<Typography fontSize={18} ml={2} mr={2} mt={1}>{props.item.data.price}$</Typography>
