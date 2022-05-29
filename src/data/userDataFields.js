@@ -5,7 +5,8 @@ export const userDataFields = {
 		error:false,
 		errorText:"",
 		width:350,
-		mode:["register","checkout","login","password"]
+		type:"text",
+		mode:["register","checkout","login","password","contact"]
 	},
 	repemail:{
 		label:"Repetir email",
@@ -13,6 +14,7 @@ export const userDataFields = {
 		error:false,
 		errorText:"",
 		width:350,
+		type:"text",
 		mode:["checkout"]
 	},
 	oldpassword:{
@@ -21,6 +23,7 @@ export const userDataFields = {
 		error:false,
 		errorText:"",
 		width:250,
+		type:"text",
 		mode:["password"]		
 	},
 	password:{
@@ -29,6 +32,7 @@ export const userDataFields = {
 		error:false,
 		errorText:"",
 		width:250,
+		type:"password",
 		mode:["login","register","password"]		
 	},
 	reppassword:{
@@ -37,6 +41,7 @@ export const userDataFields = {
 		error:false,
 		errorText:"",
 		width:250,
+		type:"password",
 		mode:["register"]		
 	},
 	name:{
@@ -45,7 +50,8 @@ export const userDataFields = {
 		error:false,
 		errorText:"",
         width:250,
-		mode:["register","checkout","modify"]
+		type:"text",
+		mode:["register","checkout","modify","contact"]
 	},
 	surname:{
 		label:"Apellido",
@@ -53,7 +59,8 @@ export const userDataFields = {
 		error:false,
 		errorText:"",
         width:250,
-		mode:["register","checkout","modify"]
+		type:"text",
+		mode:["register","checkout","modify","contact"]
 	},
 	phone:{
 		label:"Teléfono",
@@ -61,6 +68,16 @@ export const userDataFields = {
 		error:false,
 		errorText:"",
         width:200,
-		mode:["register","checkout","modify"]
+		type:"text",
+		mode:["register","checkout","modify","contact"]
+	},
+	message:{
+		label:"Escribe aquí tu consulta",
+		data:"",
+		error:false,
+		errorText:"",
+        width:400,
+		type:"multiline",
+		mode:["contact"]
 	},
 }

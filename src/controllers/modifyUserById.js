@@ -1,11 +1,12 @@
 import { serverURL } from "../data/server";
 
 export async function modifyUser(input,id,token) {
+    const auth = token ? `JWT "${token}"` : null
     const requestOptions = {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `JWT ${token}` ,
+            Authorization: auth ,
         },
         body: JSON.stringify({
             name: input.name.data,

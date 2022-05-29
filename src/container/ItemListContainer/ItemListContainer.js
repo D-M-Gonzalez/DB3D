@@ -5,7 +5,9 @@ import { useOutletContext, useNavigate, useSearchParams} from 'react-router-dom'
 import FilterMenu from '../../components/Menu/FilterMenu';
 import FilterAccordion from '../../components/Accordions/FilterAccordion';
 import { itemCategories } from '../../data/itemCategories';
-import SearchForm from '../../components/SearchForm/SearchForm';
+import SearchForm from '../../components/Form/SearchForm';
+import SelectForm from '../../components/Form/SelectForm';
+import Error404 from '../../components/Error404/Error404';
 
 export default function ItemListContainer() {
   	const {loadStore,page,total,size} = useOutletContext();
@@ -17,16 +19,22 @@ export default function ItemListContainer() {
 	const nav = useNavigate();
 
 	useEffect(()=>{
-		setExpanded(searchParams.get("category").toLowerCase())
-	},[loadStore])
+		if(searchParams.get("category")){
+			setExpanded(searchParams.get("category").toLowerCase())
+		}
+	},[loadStore,searchParams])
 
 	const showDetail = (id) => {
 		nav(`/detail/${id}`)
 	}
 
 	const handleChange = (event, value) => {
-		setSearchParams({...Object.fromEntries([...searchParams]),page:value,size:10})
+		setSearchParams({...Object.fromEntries([...searchParams]),page:value,size:size})
 	};
+
+	const handleSelect = (event) => {
+		setSearchParams({...Object.fromEntries([...searchParams]),page:page,size:event.target.value})
+	}
 
 	const handleExpanded = (label) => {
 		setExpanded(label)
@@ -66,6 +74,11 @@ export default function ItemListContainer() {
 						display="flex"
 						flexDirection="column"
 						>
+						<SelectForm
+							value={size}
+							handleChange={handleSelect}
+							helperText="Cantidad de items"
+						/>
 						<SearchForm/>
 						{Object.entries(itemCategories).map((category)=>{
 							return (
@@ -86,8 +99,14 @@ export default function ItemListContainer() {
 				<Divider orientation="vertical" flexItem />
 				<Grid item container pt={2} pb={2} sm={8.95} xs={11.95} justifyContent="center" sx={{backgroundColor:"rgb(240, 240, 240)"}}>
 					<ItemList detail={showDetail}/>
-					{ page && total && size &&
-					<Pagination count={Math.trunc(total/size)+1} page={Number(page)} onChange={handleChange} siblingCount={1} boundaryCount={1}/>		
+					{ (page && total && total !== 0 && size) ?
+					<Pagination 
+						count={Math.trunc(total/size)+1} 
+						page={Number(page)} 
+						onChange={handleChange} 
+						siblingCount={1} 
+						boundaryCount={1}
+					/> : <Error404 message="No se encontraron items"/>	
 					}
 				</Grid>
 			</Grid>

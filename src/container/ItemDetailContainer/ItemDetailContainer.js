@@ -14,18 +14,17 @@ export default function ItemDetailContainer() {
     const nav = useNavigate()
 
     useEffect(()=>{   
+        const getProductById = async () => {
+            const response = await findProductById(params.id)
+            setSearchedItem(response)
+        }
         getProductById()
         if(globalData.cartList.find((item)=>{
             return item.id === params.id
         })){
             setBought(true);
         }
-    },[])
-
-    const getProductById = async () => {
-        const response = await findProductById(params.id)
-        setSearchedItem(response)
-    }
+    },[globalData.cartList,params.id])
 
     const handleClick = (event) => {
         event.currentTarget.id === "back" && nav(-1);

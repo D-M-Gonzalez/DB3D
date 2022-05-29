@@ -34,7 +34,7 @@ export default function DetailItem(props) {
             <Grid container>
                 <Grid item container xs={12} sx={{height:1000}} justifyContent="center" alignItems="center">
                     <Paper sx={{borderRadius:"20px"}}>
-                        <Typography fontSize={80} m={5} fontWeight={700}>¡El Item que estas buscando no existe!</Typography>
+                        <Typography fontSize={{lg:80,md:50,sm:40,xs:30}} m={5} fontWeight={700}>¡El Item que estas buscando no existe!</Typography>
                     </Paper>
                 </Grid>
             </Grid>

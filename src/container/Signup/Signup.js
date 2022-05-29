@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Grid, Typography, Paper, Button } from '@mui/material';
+import { Grid, Typography, Paper, Button, useMediaQuery, useTheme } from '@mui/material';
 import fondo4 from '../../img/fondo4.jpg';
 import NewUserForm from '../../components/Form/NewUserForm';
 import { blurSignupValidation, changeSignupValidation, submitValidation } from '../../modules/Validation';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Navigate from '../../modules/Navigator';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { customTheme } from '../../MuiTheme';
 
 const MySwal = withReactContent(Swal);
 
@@ -22,6 +23,10 @@ const background1 = {
 export default function Register() {
 	const [userData, setUserData] = useState(userDataFields)
 	const nav = useNavigate()
+	const theme = useTheme(customTheme)
+    const smallDevices = useMediaQuery(theme.breakpoints.up('sm'))
+    const mediumDevices = useMediaQuery(theme.breakpoints.up('md'))
+    const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
 
 	const handleChange = (event) => {
 		changeSignupValidation(userData,setUserData,event)
@@ -78,6 +83,7 @@ export default function Register() {
 								<Button
 									variant="db3d"
 									onClick={handleClick({action:"accept"})}
+									size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
 									>
 									<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Aceptar</Typography>
 								</Button>
@@ -87,6 +93,7 @@ export default function Register() {
 								<Button
 									variant="db3d"
 									onClick={handleClick({action:"cancel"})}
+									size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
 									>
 									<Typography fontWeight={700} fontSize={{lg:20,md:18,sm:16}}>Volver</Typography>
 								</Button>

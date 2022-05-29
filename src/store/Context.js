@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import { Outlet, useSearchParams, useLocation } from 'react-router-dom';
+import { Outlet, useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import {useMediaQuery, useTheme} from '@mui/material/';
 import { customTheme } from '../MuiTheme';
 import { findProducts } from '../controllers/findProducts';
+import validateURL from '../modules/ValidateURL';
+import Navigate from '../modules/Navigator';
 
 export default function Context(props) {
 
@@ -43,6 +45,7 @@ export default function Context(props) {
 		update: (data) => updateGlobal(data),
 	})
     const URL = useLocation();
+    const nav = useNavigate();
 
     useEffect(()=>{
 		const found = imageSize.find((el)=>{
@@ -53,7 +56,7 @@ export default function Context(props) {
 
     useEffect(()=>{
         setStore(null)
-        if ( URL.pathname === '/items/list' ){
+        if ( URL.pathname === '/items' ){
             filterItems()
         }
     },[searchParams])
@@ -93,15 +96,21 @@ export default function Context(props) {
         const subcategory = searchParams.get("subcategory")
         const search = searchParams.get("search")
         const sort = searchParams.get("sort")
-        const response = await findProducts(page,size,category,subcategory,search,sort)
+        const validURL = validateURL([page,size,category,subcategory])
 
-        setPagination({
-            page:page,
-            size:size,
-            total:response.total
-        })
-
-        setStore(response)
+        if (!validURL){
+            const response = await findProducts(page,size,category,subcategory,search,sort)
+    
+            setPagination({
+                page:page,
+                size:size,
+                total:response.total
+            })
+    
+            setStore(response)
+        } else {
+            nav(Navigate("ALL"))
+        }
     }
 
     return (

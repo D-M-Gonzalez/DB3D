@@ -1,5 +1,5 @@
-import React, {useState,useEffect} from 'react'
-import { Grid, Typography, Paper, Button, Backdrop, CircularProgress, useMediaQuery, useTheme} from '@mui/material';
+import React, {useState,useEffect, useCallback} from 'react'
+import { Grid, Typography, Paper, Button, useMediaQuery, useTheme} from '@mui/material';
 import CheckoutTable from '../../components/Table/CheckoutTable';
 import Navigate from '../../modules/Navigator';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { findUserById } from '../../controllers/findUserById';
 import { createOrder } from '../../controllers/createOrder';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Loading from '../../components/Loading/Loading';
 
 const MySwal = withReactContent(Swal);
 
@@ -23,40 +24,46 @@ export default function Checkout() {
 	const mediumDevices = useMediaQuery(theme.breakpoints.up('md'))
 	const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
 
+	const getUserData = useCallback(async () => {
+		const user = await JSON.parse(localStorage.getItem("user"))
+		const response = await findUserById(user.id,user.token);
+
+		setUserData({...userDataFields,
+					email:{
+						...userDataFields["email"],
+						data: response.data.email,
+						error: false,
+					},
+					repemail:{
+						...userDataFields["repemail"],
+						data: response.data.email,
+						error: false,
+					},
+					name:{
+						...userDataFields["name"],
+						data: response.data.name,
+						error: false,
+					},
+					surname:{
+						...userDataFields["surname"],
+						data: response.data.surname,
+						error: false,
+					},
+					phone:{
+						...userDataFields["phone"],
+						data: response.data.phone,
+						error: false,
+					},
+				}
+			)
+		},[])
+
 	useEffect(()=>{   
 		if(localStorage.getItem("user")){
 			getUserData()
 			setDisableFields(true)
 		}
-    },[globalData])
-
-	const getUserData = async () => {
-		const user = await JSON.parse(localStorage.getItem("user"))
-		const response = await findUserById(user.id,`"${user.token}"`);
-		setUserData({...userData,
-					email:{
-						...userData["email"],
-						data: response.data.email,
-					},
-					repemail:{
-						...userData["repemail"],
-						data: response.data.email,
-					},
-					name:{
-						...userData["name"],
-						data: response.data.name,
-					},
-					surname:{
-						...userData["surname"],
-						data: response.data.surname,
-					},
-					phone:{
-						...userData["phone"],
-						data: response.data.phone,
-					},
-				}
-			)
-		}
+    },[globalData,getUserData])
 
 	const handleClick = name => async () => {
 		if(name.action === "buy"){
@@ -72,7 +79,7 @@ export default function Checkout() {
 				  }).then(async (result) => {
 					if (result.isConfirmed) {
 						const user = await JSON.parse(localStorage.getItem("user"))
-						const token = user ? `"${user.token}"` : null
+						const token = user ? user.token : null
 						const response = await createOrder(userData,globalData.cartList,token)
 						update({...globalData,cartList:[]});
 						localStorage.removeItem("items");
@@ -138,12 +145,7 @@ export default function Checkout() {
 	
     if(Object.keys(globalData).length < 1){
 		return (
-            <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-			open={true}
-          	>
-            <CircularProgress color="inherit" />
-          </Backdrop>			
+			<Loading/>	
 		)
 	} else {
   	return (

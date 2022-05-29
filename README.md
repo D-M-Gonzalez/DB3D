@@ -51,6 +51,7 @@ Este proyecto consiste de 3 secciones:
 | src/modules/ | Lógica genérica de JS
 | src/modules/Navigator.js | Constantes definidas para facilitar la navegación y no utilizar links
 | src/modules/Validation.js | Lógica de validación de formularios
+| src/modules/ValidateURL.js | Lógica de validación de la query url
 | src/store/ |  Contenedor del contexto
 | src/store/Context.js | Componente proveedor del contexto
 

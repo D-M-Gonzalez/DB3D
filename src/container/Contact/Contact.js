@@ -1,13 +1,21 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react'
 import { useSearchParams} from 'react-router-dom';
-import { Box, Grid, Typography, Paper, TextField, Button, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Grid, Typography, Paper, Button, useTheme, useMediaQuery } from '@mui/material';
+import { blurSignupValidation, changeSignupValidation, submitValidation } from '../../modules/Validation';
 import { customTheme } from '../../MuiTheme';
 import fondo4 from '../../img/fondo4.jpg';
 import fondo5 from '../../img/fondo5.jpg';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import NewUserForm from '../../components/Form/NewUserForm';
+import { userDataFields } from '../../data/userDataFields';
+import { findUserById } from '../../controllers/findUserById';
+
+const MySwal = withReactContent(Swal);
 
 const background1 = {
 	width:"100vw",
-	height:"83vw",
+	height:"100vw",
 	backgroundImage:`url(${fondo4})`,
 	backgroundSize:"cover",
 }
@@ -22,8 +30,15 @@ const background2 = {
 export default function Contact() {
 	const theme = useTheme(customTheme)
     const smallDevices = useMediaQuery(theme.breakpoints.up('sm'))
-	const [searchParams, setSearchParams] = useSearchParams();
-	const homeRef = [];
+    const mediumDevices = useMediaQuery(theme.breakpoints.up('md'))
+    const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
+	const [searchParams] = useSearchParams();
+	const [userData, setUserData] = useState(userDataFields)
+	const homeRef = useMemo(()=>{
+		const ref = []
+		return ref
+	},[])
+
 	homeRef.push(
 		{
 			id:useRef(),
@@ -35,16 +50,68 @@ export default function Contact() {
 		},
 	)
 
-	useEffect(()=>{
-        scrollToRef();
-    },[searchParams])
+	const getUserData = useCallback(async () => {
+		const user = await JSON.parse(localStorage.getItem("user"))
+		const response = await findUserById(user.id,user.token);
+		setUserData({...userDataFields,
+					email:{
+						...userDataFields["email"],
+						data: response.data.email,
+						error: false,
+					},
+					name:{
+						...userDataFields["name"],
+						data: response.data.name,
+						error: false,
+					},
+					surname:{
+						...userDataFields["surname"],
+						data: response.data.surname,
+						error: false,
+					},
+					phone:{
+						...userDataFields["phone"],
+						data: response.data.phone,
+						error: false,
+					},
+				}
+			)
+		},[])
 
-	const scrollToRef = () => {
-		homeRef.forEach((el)=>{
-            if ({...Object.fromEntries([...searchParams])}.section === el.name){
-                el.id.current.scrollIntoView({block:'start', behavior: 'smooth'})
-            }                
-        }); 		
+	useEffect(()=>{
+			if(localStorage.getItem("user")){
+				getUserData()
+			}
+	},[getUserData])
+
+	useEffect(()=>{
+		const scrollToRef = () => {
+			homeRef.forEach((el)=>{
+				if ({...Object.fromEntries([...searchParams])}.section === el.name){
+					el.id.current.scrollIntoView({block:'start', behavior: 'smooth'})
+				}                
+			}); 		
+		}
+        scrollToRef();
+    },[searchParams,homeRef])
+
+	const handleClick = () => {
+		const error = submitValidation(userData,setUserData,"contact")
+		if(!error){
+			MySwal.fire({
+				title: "Consulta enviada",
+				html: `Su consulta ha sido enviada, pronto recibiras una respuesta. Gracias por contactarnos`,
+				showConfirmButton: true,
+			  })
+		}
+	}
+
+	const handleChange = (event) => {
+		changeSignupValidation(userData,setUserData,event)
+	}
+
+	const handleBlur = (event) => {
+		blurSignupValidation(userData,setUserData,event)
 	}
 
 
@@ -75,49 +142,26 @@ export default function Contact() {
 									display="flex"
 									flexDirection="column"
 									m={{md:8,xs:2}}
-								>
-									<TextField
-										id='nombre'
-										variant='outlined'
-										label='Nombre o Empresa'
-										size='small'
-										sx={{mt:1}}
-									/>
-									<TextField
-										id='email'
-										variant='outlined'
-										label='Email'
-										size='small'
-										sx={{mt:1}}
-									/>
-									<TextField
-										id='telefono'
-										variant='outlined'
-										label='Teléfono'
-										size='small'
-										sx={{mt:1}}
-									/>
-									<TextField
-										id='consulta'
-										variant='outlined'
-										label='Escribe aquí tu consulta'
-										size='small'
-										multiline
-										rows={4}
-										sx={{mt:1}}
-									/>
-									<Box
-										display="flex"
-										flexDirection="row"
-										mt={{md:4,xs:1}}
-										mb={{md:-2,xs:1}}
 									>
-										<Button
-											variant="db3d"
-										>
-											<Typography fontSize={{md:30,sm:16}} fontWeight={700}>Enviar Mensaje</Typography>
-										</Button>
-									</Box>
+									<NewUserForm
+										userData={userData} 
+										fields={Object.entries(userDataFields).filter((data)=>data[1].mode.indexOf("contact") !== -1)} 
+										handleBlur={handleBlur} 
+										handleChange={handleChange}
+									/>
+									<Grid container>
+										<Grid item/>
+										<Grid item>
+											<Button
+												variant="db3d"
+												onClick={handleClick}
+												size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
+												>
+												<Typography fontSize={{md:30,sm:16}} fontWeight={700}>Enviar Mensaje</Typography>
+											</Button>
+										</Grid>
+										<Grid item/>
+									</Grid>
 								</Box>					
 							</Paper>
 						</Grid>
@@ -195,55 +239,32 @@ export default function Contact() {
 								</Typography>
 							</Box>
 						</Grid>
-						<Grid item container xs={12} mt={2} justifyContent="center">
-							<Paper elevation={10}>
+						<Grid item container md={8} sm={12} justifyContent="center">
+							<Paper sx={{width:"100vw"}} elevation={10}>
 								<Box
 									display="flex"
 									flexDirection="column"
-									m={{md:8,xs:2}}
-								>
-									<TextField
-										id='nombre'
-										variant='outlined'
-										label='Nombre o Empresa'
-										size='small'
-										sx={{mt:1}}
-									/>
-									<TextField
-										id='email'
-										variant='outlined'
-										label='Email'
-										size='small'
-										sx={{mt:1}}
-									/>
-									<TextField
-										id='telefono'
-										variant='outlined'
-										label='Teléfono'
-										size='small'
-										sx={{mt:1}}
-									/>
-									<TextField
-										id='consulta'
-										variant='outlined'
-										label='Escribe aquí tu consulta'
-										size='small'
-										multiline
-										rows={4}
-										sx={{mt:1}}
-									/>
-									<Box
-										display="flex"
-										flexDirection="row"
-										mt={{md:4,xs:1}}
-										mb={{md:-2,xs:1}}
+									m={{md:8,xs:1}}
 									>
-										<Button
-											variant="db3d"
-										>
-											<Typography fontSize={12} fontWeight={400}>Enviar Mensaje</Typography>
-										</Button>
-									</Box>
+									<NewUserForm
+										userData={userData} 
+										fields={Object.entries(userDataFields).filter((data)=>data[1].mode.indexOf("contact") !== -1)} 
+										handleBlur={handleBlur} 
+										handleChange={handleChange}
+									/>
+									<Grid container>
+										<Grid item/>
+										<Grid item>
+											<Button
+												variant="db3d"
+												onClick={handleClick}
+												size={!mediumDevices ? "small" : !largeDevices ? "medium" : "large"}
+												>
+												<Typography fontSize={{md:30,sm:16}} fontWeight={700}>Enviar Mensaje</Typography>
+											</Button>
+										</Grid>
+										<Grid item/>
+									</Grid>
 								</Box>					
 							</Paper>
 						</Grid>

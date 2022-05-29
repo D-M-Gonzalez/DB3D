@@ -48,10 +48,7 @@ export default function NavBar(props) {
                 denyButtonText: "Cancelar",
               }).then(async (result) => {
                 if (result.isConfirmed) {
-                    localStorage.removeItem("id")
                     localStorage.removeItem("user")
-                    localStorage.removeItem("email")
-                    localStorage.removeItem("token")
                     nav(Navigator("NOSOTROS"))
                 }
               });

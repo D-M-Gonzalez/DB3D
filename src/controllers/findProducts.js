@@ -2,6 +2,7 @@ import {serverURL} from "../data/server.js";
 
 export async function findProducts(page,size,category,subcategory,search,sort) {
   !sort && (sort = "none")
+  search === "undefined" && (search = "")
     const requestOptions = {
       method: "GET",
       headers: {

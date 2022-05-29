@@ -1,5 +1,5 @@
 import React, {createContext } from 'react'
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ItemDetailContainer from './container/ItemDetailContainer/ItemDetailContainer';
 import ItemList from './container/Item/ItemList';
 import ItemListContainer from './container/ItemListContainer/ItemListContainer';
@@ -14,7 +14,7 @@ import ModifyUser from './container/ModifyUser/ModifyUser';
 import Login from './container/Login/Login';
 import UserOrderList from './container/UserOrderList/UserOrderList';
 import SingleOrderList from './container/SingleOrderList/SingleOrderList';
-import Error404 from './container/Error404/Error404';
+import Error404 from './components/Error404/Error404';
 import './swal.css';
 
 export const Global = createContext();
@@ -24,11 +24,10 @@ export default function App() {
   	return (
 			<ThemeProvider theme={customTheme}>
 				<Routes>
-					<Route path="/" element={<Layout/>}>
+					<Route path="/*" element={<Layout/>}>
+						<Route path="*" element={<Navigate to="/items?page=1&size=10&category=ALL&subcategory=ALL&search=" replace/>}/>
 						<Route path="home" element={<Home/>}/>
-						<Route path="items/" element={<ItemListContainer/>}>
-							<Route path="list" element={<ItemList/>}/>
-						</Route>
+						<Route path="items" element={<ItemListContainer/>}/>
 						<Route path="detail/:id" element={<ItemDetailContainer/>}/>
 						<Route path="contact" element={<Contact/>}/>
 						<Route path="checkout" element={<Checkout/>}/>
@@ -37,7 +36,7 @@ export default function App() {
 						<Route path="modifyuser" element={<ModifyUser/>}/>
 						<Route path="userorders/:id" element={<UserOrderList/>}/>
 						<Route path="order/:id" element={<SingleOrderList/>}/>
-						<Route path="*" element={<Error404/>}/>
+						<Route path="*" element={<Error404 message="La página que estas buscando no existe"/>}/>
 					</Route>
 				</Routes>
 			</ThemeProvider>

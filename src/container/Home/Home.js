@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useMemo} from 'react';
 import { useSearchParams, useOutletContext} from 'react-router-dom';
 import { Box } from '@mui/material';
 import HomeUs from './Sub/HomeUs';
@@ -7,8 +7,11 @@ import HomeProducts from './Sub/HomeProducts';
 
 export default function Home() {
 	const {ref} = useOutletContext();
-    const [searchParams, setSearchParams] = useSearchParams();
-	const homeRef = [];
+    const [searchParams] = useSearchParams();
+	const homeRef = useMemo(()=>{
+		const ref = []
+		return ref
+	},[])
 	homeRef.push(
 		{
 			id:ref,
@@ -25,16 +28,16 @@ export default function Home() {
 	)
 
     useEffect(()=>{
-        scrollToRef();
-    },[searchParams])
+		const scrollToRef = () => {
+			homeRef.forEach((el)=>{
+				if ({...Object.fromEntries([...searchParams])}.section === el.name){
+					el.id.current.scrollIntoView({block:'start', behavior: 'smooth'})
+				}                
+			}); 		
+		}
 
-	const scrollToRef = () => {
-		homeRef.forEach((el)=>{
-            if ({...Object.fromEntries([...searchParams])}.section === el.name){
-                el.id.current.scrollIntoView({block:'start', behavior: 'smooth'})
-            }                
-        }); 		
-	}
+        scrollToRef();
+    },[searchParams,homeRef])
 
   return (
 		<Box>

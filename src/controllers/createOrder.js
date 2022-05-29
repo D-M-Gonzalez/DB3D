@@ -1,7 +1,7 @@
 import { serverURL } from "../data/server";
 
 export async function createOrder(input,products,token) {
-    const auth = token && `JWT ${token}`
+    const auth = token ? `JWT "${token}"` : null
     const requestOptions = {
         method: "POST",
         headers: {

@@ -1,20 +1,15 @@
 import React, {useState,useEffect} from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { Grid, Paper, Backdrop, CircularProgress, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import { findOrderById } from '../../controllers/findOrderById';
 import OrderTable from '../../components/Table/OrderTable';
 import fondo5 from '../../img/fondo5.jpg';
+import Loading from '../../components/Loading/Loading';
+import Error404 from '../../components/Error404/Error404';
 
 const background1 = {
 	width:"100vw",
 	minHeight:"800px",
-	backgroundImage:`url(${fondo5})`,
-	backgroundSize:"cover",
-}
-
-const background2 = {
-	width:"100vw",
-	minHeight:"1200px",
 	backgroundImage:`url(${fondo5})`,
 	backgroundSize:"cover",
 }
@@ -25,13 +20,14 @@ export default function SingleOrderList() {
     const nav = useNavigate()
 
 	useEffect(()=>{
-        fillProductList();
-    },[])
+        const fillProductList = async () => {
+            const response = await findOrderById(params.id)
+            setProductList(response)
+        }
 
-	const fillProductList = async () => {
-        const response = await findOrderById(params.id)
-		setProductList(response)
-	}
+        fillProductList();
+    },[params.id])
+
 
 	const calculateTotal = () => {
 		let total = 0;
@@ -47,24 +43,11 @@ export default function SingleOrderList() {
 	
     if(!productList){
 		return (
-            <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-			open={true}
-          	>
-            <CircularProgress color="inherit" />
-          </Backdrop>			
+            <Loading />	
 		)
 	} else if(productList && productList.status !== 200) {
         return (
-        <div style={background2}>
-            <Grid container>
-                <Grid item container xs={12} sx={{height:1000}} justifyContent="center" alignItems="center">
-                    <Paper sx={{borderRadius:"20px"}}>
-                        <Typography fontSize={80} m={5} fontWeight={700}>¡El Item que estas buscando no existe!</Typography>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </div>
+            <Error404 message={productList.message}/>
         )
     } else {
   	return (

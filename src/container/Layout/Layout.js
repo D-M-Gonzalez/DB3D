@@ -1,22 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {Grid, Box, Divider, useTheme, useMediaQuery} from '@mui/material/';
 import NavBar from '../NavBar/NavBar';
-import { useNavigate, useLocation } from 'react-router-dom';
 import Context from '../../store/Context';
 import Footer from '../Footer/Footer';
-import Navigate from '../../modules/Navigator';
 
 export default function Layout() {
     const [totalItems, setTotalItems] = useState()
     const theme = useTheme()
     const smallDevices = useMediaQuery(theme.breakpoints.up('sm'))
-    const location = useLocation()
-    const nav = useNavigate()
     const layoutRef = useRef()
 
-    useEffect(()=>{
-        location.pathname === '/' && nav(Navigate("ALL"))
-    },[])
 
     return (
         <Grid container ref={layoutRef}>

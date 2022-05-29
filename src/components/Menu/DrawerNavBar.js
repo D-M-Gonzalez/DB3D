@@ -21,7 +21,7 @@ export default function DrawerNavBar(props) {
             >
             {Object.entries(props.menuItems).map((category)=>{
                 return (
-                    <Box>
+                    <Box key={category[0]}>
                         <Typography fontSize={18} m={1}>{category[1].label}</Typography>
                         <Divider/>
                         {Array.from(category[1].subcategories).map((subcategory)=>{

@@ -16,7 +16,9 @@ export default function NewUserForm(props) {
                     <TextField
                         key={field[0]}
                         id={field[0]}
-                        type={field[0].includes('password') ? 'password' : 'text'}
+                        type={field[1].type === "password" ? 'password' : 'text'}
+                        multiline={field[1].type === "multiline" ? true : false}
+                        rows={field[1].type === "multiline" ? 4 : 1}
                         variant='outlined'
                         label={field[1].label}
                         error={props.userData[field[0]].error}

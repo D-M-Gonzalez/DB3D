@@ -9,11 +9,11 @@ const background1 = {
 	backgroundSize:"cover",
 }
 
-export default function Error404() {
+export default function Error404(props) {
   return (
     <div style={background1}>
         <Container sx={{width:"50vw"}}>
-            <Typography fontWeight={700} mt={30} fontSize={{lg:60, md:50, sm:45, xs:30}}>La página que estas buscando no se encuentra habilitada</Typography>
+            <Typography fontWeight={700} mt={30} fontSize={{lg:60, md:50, sm:45, xs:30}}>{props.message}</Typography>
         </Container>
     </div>
   )
