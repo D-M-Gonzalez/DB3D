@@ -106,7 +106,7 @@ export default function ItemListContainer() {
 						onChange={handleChange} 
 						siblingCount={1} 
 						boundaryCount={1}
-					/> : <Error404 message="No se encontraron items"/>	
+					/> : <div></div>
 					}
 				</Grid>
 			</Grid>
