@@ -124,7 +124,7 @@ export default function ModifyUser() {
 						  <Typography fontWeight={700} fontSize={{lg:50,md:40,xs:20}}>Modificar mis datos</Typography>
 					  </Grid>
 					  <Grid item container mt={10} xs={12} justifyContent="center">
-						  <Paper sx={{width:"500px"}} elevation={10}>
+						  <Paper elevation={10}>
 							  <Grid item container xs={12} mt={3} justifyContent="center">
 								  <Typography fontSize={{lg:25,md:20,xs:15}}>Re-ingresa tus datos:</Typography>
 							  </Grid>

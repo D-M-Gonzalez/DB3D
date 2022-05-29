@@ -65,7 +65,7 @@ export default function Register() {
 					<Typography fontWeight={700} fontSize={{lg:50,md:40,xs:20}}>Registrar nuevo usuario</Typography>
 				</Grid>
 				<Grid item container mt={10} xs={12} justifyContent="center">
-					<Paper sx={{width:"500px"}} elevation={10}>
+					<Paper elevation={10}>
 						<Grid item container xs={12} mt={3} justifyContent="center">
 							<Typography fontSize={{lg:25,md:20,xs:15}}>Ingresa tus datos:</Typography>
 						</Grid>
