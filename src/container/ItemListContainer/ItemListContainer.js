@@ -7,7 +7,6 @@ import FilterAccordion from '../../components/Accordions/FilterAccordion';
 import { itemCategories } from '../../data/itemCategories';
 import SearchForm from '../../components/Form/SearchForm';
 import SelectForm from '../../components/Form/SelectForm';
-import Error404 from '../../components/Error404/Error404';
 
 export default function ItemListContainer() {
   	const {loadStore,page,total,size} = useOutletContext();
