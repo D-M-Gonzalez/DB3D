@@ -37,7 +37,7 @@ export default function UserOrderList() {
         name.action === "order" && nav(`/order/${name.id}`)
     }
 	
-    if(!orderList){
+    if(orderList.length < 1){
 		return (
             <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
