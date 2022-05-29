@@ -8,7 +8,7 @@ import { itemCategories } from '../../data/itemCategories';
 import SearchForm from '../../components/SearchForm/SearchForm';
 
 export default function ItemListContainer() {
-  	const {page,total,size} = useOutletContext();
+  	const {loadStore,page,total,size} = useOutletContext();
 	const [expanded, setExpanded] = useState();
 	const [searchParams, setSearchParams] = useSearchParams({
 		page: 1,
@@ -18,7 +18,7 @@ export default function ItemListContainer() {
 
 	useEffect(()=>{
 		setExpanded(searchParams.get("category").toLowerCase())
-	},[page])
+	},[loadStore])
 
 	const showDetail = (id) => {
 		nav(`/detail/${id}`)
@@ -86,7 +86,9 @@ export default function ItemListContainer() {
 				<Divider orientation="vertical" flexItem />
 				<Grid item container pt={2} pb={2} sm={8.95} xs={11.95} justifyContent="center" sx={{backgroundColor:"rgb(240, 240, 240)"}}>
 					<ItemList detail={showDetail}/>
-					<Pagination count={Math.trunc(total/size)+1} page={Number(page)} onChange={handleChange} siblingCount={1} boundaryCount={1}/>
+					{ page && total && size &&
+					<Pagination count={Math.trunc(total/size)+1} page={Number(page)} onChange={handleChange} siblingCount={1} boundaryCount={1}/>		
+					}
 				</Grid>
 			</Grid>
 		)

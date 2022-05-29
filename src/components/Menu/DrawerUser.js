@@ -18,7 +18,7 @@ export default function DrawerUser(props) {
                 onClick={() => props.handleDrawer({id:"user",value:true})}
                 >
                 <PersonIcon fontSize={props.size} sx={{color:"black"}}/>
-                {props.name ? props.name : "Invitado"}
+                {props.name ? props.name.name : "Invitado"}
             </Button>
             <Drawer
                 anchor='right'
@@ -26,9 +26,9 @@ export default function DrawerUser(props) {
                 onClose={() => props.handleDrawer({id:"user",value:false})}
             >
                 <Box>
-                    <Typography fontSize={18} m={1}>{props.name}</Typography>
+                    <Typography fontSize={18} m={1}>{props.name ? props.name.name : "Invitado"}</Typography>
                     <Divider/>
-                    { localStorage.getItem("id") ? 
+                    { props.name ? 
                         <>
                             <MenuItem onClick={handleClick("modifyuser")} sx={{fontFamily:"Chakra Petch"}}>Modificar mis Datos</MenuItem>
                             <MenuItem onClick={handleClick("userorders")} sx={{fontFamily:"Chakra Petch"}}>Mis ordenes</MenuItem>

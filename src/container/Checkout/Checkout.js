@@ -24,14 +24,15 @@ export default function Checkout() {
 	const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
 
 	useEffect(()=>{   
-		if(localStorage.getItem("id") && localStorage.getItem("token")){
-			getUserData(JSON.parse(localStorage.getItem("id")),localStorage.getItem("token"))
+		if(localStorage.getItem("user")){
+			getUserData()
 			setDisableFields(true)
 		}
     },[globalData])
 
-	const getUserData = async (id,token) => {
-		const response = await findUserById(id,token);
+	const getUserData = async () => {
+		const user = await JSON.parse(localStorage.getItem("user"))
+		const response = await findUserById(user.id,`"${user.token}"`);
 		setUserData({...userData,
 					email:{
 						...userData["email"],
@@ -70,16 +71,18 @@ export default function Checkout() {
 					denyButtonText: "No!",
 				  }).then(async (result) => {
 					if (result.isConfirmed) {
-						const response = await createOrder(userData,globalData.cartList,localStorage.getItem("token"))
+						const user = await JSON.parse(localStorage.getItem("user"))
+						const token = user ? `"${user.token}"` : null
+						const response = await createOrder(userData,globalData.cartList,token)
+						update({...globalData,cartList:[]});
+						localStorage.removeItem("items");
 					  Swal.fire({
 						title: response.message,
 						html: `<div>La id de tu orden es ${response.data.id}</div>
 						<div>Puedes verla haciendo click en el siguiente link:</div>
 						<a href="http://localhost:3000/order/${response.data.id}">Link a la orden</a>`,
 						showConfirmButton: true,
-					  }).then(() => {
-						update({...globalData,cartList:[]});
-						localStorage.removeItem("items");
+					  }).then(async () => {
 						nav(Navigate("ALL"));
 					  });
 					}

@@ -29,7 +29,8 @@ export default function UserOrderList() {
     },[])
 
 	const fillProductList = async () => {
-        const response = await findUserById(params.id,localStorage.getItem("token"))
+        const user = await JSON.parse(localStorage.getItem("user"))
+        const response = await findUserById(params.id,`"${user.token}"`);
 		setOrderList(response)
 	}
 

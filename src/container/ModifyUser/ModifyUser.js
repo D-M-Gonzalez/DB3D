@@ -26,14 +26,15 @@ export default function ModifyUser() {
 	const nav = useNavigate()
 
 	useEffect(()=>{
-		if(localStorage.getItem("id") && localStorage.getItem("token")){
-			getUserData(JSON.parse(localStorage.getItem("id")),localStorage.getItem("token"))
+		if(localStorage.getItem("user")){
+			getUserData()
 			setDisableFields(false)
 		}
 	},[])
 
-	const getUserData = async (id,token) => {
-		const response = await findUserById(id,token);
+	const getUserData = async () => {
+		const user = await JSON.parse(localStorage.getItem("user"))
+		const response = await findUserById(user.id,`"${user.token}"`);
 		setUserData({...userData,
 					name:{
 						...userData["name"],
@@ -63,14 +64,20 @@ export default function ModifyUser() {
 		if(name.action === "accept"){
 			const error = submitValidation(userData,setUserData,"modify")
 			if(!error){
-				const response = await modifyUser(userData,JSON.parse(localStorage.getItem("id")),localStorage.getItem("token"));
+				const user = await JSON.parse(localStorage.getItem("user"))
+				const response = await modifyUser(userData,user.id,`"${user.token}"`);
 				if(response.status === 200){
 					MySwal.fire({
 						title: <strong>{response.message}!</strong>,
 						showConfirmButton: true,
 						confirmButtonText: "Okay",
 					  }).then(async () => {
-						  nav(Navigate("ALL"))
+						  	user.id = response.data.id
+							user.name = response.data.name
+							user.email = response.data.email
+							user.token = response.data.accessToken
+							localStorage.setItem("user",JSON.stringify(user))
+							nav(Navigate("ALL"))
 					  })
 				} else {
 					MySwal.fire({

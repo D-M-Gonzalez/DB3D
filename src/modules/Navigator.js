@@ -35,7 +35,7 @@ function Navigate(name){
     destination === SIGNUP && (url = '/signup');
     destination === LOGIN && (url = '/login');
     destination === MODIFYUSER && (url = '/modifyuser');
-    destination === USERORDERS && (url = `/userorders/${JSON.parse(localStorage.getItem("id"))}`);
+    destination === USERORDERS && (url = `/userorders/${JSON.parse(localStorage.getItem("user")).id}`);
 
     return url
 }

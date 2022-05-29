@@ -31,14 +31,13 @@ export default function Login() {
         if(name.action === "accept"){
             const response = await logInUser(userData)
 			if (response.status === 200) {
-				const userId = JSON.stringify(response.data.id)
-				const userName = JSON.stringify(response.data.name)
-				const userEmail = JSON.stringify(response.data.email)
-				const userToken = JSON.stringify(response.data.accessToken)
-				localStorage.setItem("id",userId)
-                localStorage.setItem("user",userName)
-				localStorage.setItem("email",userEmail)
-                localStorage.setItem("token",userToken)
+				const user = {
+					id: response.data.id,
+					name: response.data.name,
+					email: response.data.email,
+					token: response.data.accessToken,
+				}
+				localStorage.setItem("user",JSON.stringify(user))
                 nav(Navigate("ALL"))
 			} else {
 				MySwal.fire({
