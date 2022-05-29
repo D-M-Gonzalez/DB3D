@@ -87,7 +87,7 @@ export default function Checkout() {
 						title: response.message,
 						html: `<div>La id de tu orden es ${response.data.id}</div>
 						<div>Puedes verla haciendo click en el siguiente link:</div>
-						<a href="http://localhost:3000/order/${response.data.id}">Link a la orden</a>`,
+						<a href="https://velvety-queijadas-44c1c5.netlify.app/order/${response.data.id}">Link a la orden</a>`,
 						showConfirmButton: true,
 					  }).then(async () => {
 						nav(Navigate("ALL"));
