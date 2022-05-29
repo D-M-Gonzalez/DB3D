@@ -1,52 +1,52 @@
 .swal2-styled.swal2-confirm {
-    background-color: #e7e7e7;
-    color: rgb(0, 0, 0);
-    font-size: 1.3rem;
-    font-style: normal;
-    font-weight: bolder;
-    font-family: 'Chakra Petch'; 
-    border-top: 2.5px solid #ffffff;
-    border-bottom: 2.5px solid #ffffff;
+    background-color: #e7e7e7 !important;
+    color: rgb(0, 0, 0) !important;
+    font-size: 1.3rem !important;
+    font-style: normal !important;
+    font-weight: bolder !important;
+    font-family: 'Chakra Petch' !important; 
+    border-top: 2.5px solid #ffffff !important;
+    border-bottom: 2.5px solid #ffffff !important;
   }
   
   .swal2-styled.swal2-deny{
-    background-color: #ffe9e9;
-    color: rgb(0, 0, 0);
-    font-size: 1.3rem;
-    font-style: normal;
-    font-weight: bolder;
-    font-family: 'Chakra Petch'; 
-    border-top: 2.5px solid #ffffff;
-    border-bottom: 2.5px solid #ffffff;
+    background-color: #ffe9e9 !important;
+    color: rgb(0, 0, 0) !important;
+    font-size: 1.3rem !important;
+    font-style: normal !important;
+    font-weight: bolder !important;
+    font-family: 'Chakra Petch' !important; 
+    border-top: 2.5px solid #ffffff !important;
+    border-bottom: 2.5px solid #ffffff !important;
   }
   
   .swal2-styled.swal2-cancel {
-    background-color: #ffeeee;
-    color: rgb(0, 0, 0);
-    font-size: 1.3rem;
-    font-style: normal;
-    font-weight: bolder;
-    font-family: 'Chakra Petch'; 
+    background-color: #ffeeee !important;
+    color: rgb(0, 0, 0) !important;
+    font-size: 1.3rem !important;
+    font-style: normal !important;
+    font-weight: bolder !important;
+    font-family: 'Chakra Petch' !important; 
   }   
   .swal2-styled.swal2-confirm:focus{
-    box-shadow: none;
+    box-shadow: none !important;
   }
   .swal2-styled.swal2-deny:focus{
-    box-shadow: none;
+    box-shadow: none !important;
   }
   .swal2-styled.swal2-cancel:focus{
-    box-shadow: none;
+    box-shadow: none !important;
   }
   .swal2-popup {
-    color: rgb(0, 0, 0);
-    font-size: 15px;
-    font-style: normal;
-    font-family: 'Chakra Petch'; 
+    color: rgb(0, 0, 0) !important;
+    font-size: 15px !important;
+    font-style: normal !important;
+    font-family: 'Chakra Petch' !important; 
   }
   
   .swal2-footer {
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    font-style: normal;
-    font-family: 'Chakra Petch';  
+    color: rgb(0, 0, 0) !important;
+    font-size: 16px !important;
+    font-style: normal !important;
+    font-family: 'Chakra Petch' !important;  
   }
