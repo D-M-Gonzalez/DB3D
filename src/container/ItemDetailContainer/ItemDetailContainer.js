@@ -61,8 +61,8 @@ export default function ItemDetailContainer() {
                             <DetailItem item={searchedItem} handleChange={handleChange} />
                         </Grid>
                         <Grid item container mt={2} mb={2} xs={12}>
-                            <Grid item xs={4}/>
-                            <Grid item container xs={2} justifyContent="center">
+                            <Grid item sm={4} xs/>
+                            <Grid item container sm={2} xs={6} justifyContent="center">
                                 <Button
                                     id='buy'
                                     variant='db3d'
@@ -73,7 +73,7 @@ export default function ItemDetailContainer() {
                                 </Button>
                             </Grid>
                             <Grid item xs/>
-                            <Grid item container xs={2} justifyContent="center">
+                            <Grid item container sm={2} xs={6} justifyContent="center">
                                 <Button
                                     id='back'
                                     variant='db3d'
@@ -82,7 +82,7 @@ export default function ItemDetailContainer() {
                                     Volver
                                 </Button>
                             </Grid>
-                            <Grid item xs={4}/>
+                            <Grid item sm={4} xs/>
                         </Grid>
                         <Grid item container mb={4} xs={12} justifyContent="center">
                             {   bought &&

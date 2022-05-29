@@ -24,7 +24,6 @@ export default function Login() {
 	const [userData, setUserData] = useState(userDataFields)
     const nav = useNavigate()
 	const theme = useTheme(customTheme)
-    const smallDevices = useMediaQuery(theme.breakpoints.up('sm'))
     const mediumDevices = useMediaQuery(theme.breakpoints.up('md'))
     const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
 
@@ -52,6 +51,9 @@ export default function Login() {
 				  })          
 			}
         }
+		if(name.action === "cancel"){
+			nav(Navigate("ALL"))
+		}
 	}
 
   return (

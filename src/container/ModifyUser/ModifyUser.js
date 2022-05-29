@@ -29,7 +29,6 @@ export default function ModifyUser() {
 	const [disableFields, setDisableFields] = useState(true)
 	const nav = useNavigate()
 	const theme = useTheme(customTheme)
-    const smallDevices = useMediaQuery(theme.breakpoints.up('sm'))
     const mediumDevices = useMediaQuery(theme.breakpoints.up('md'))
     const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
 
@@ -105,6 +104,9 @@ export default function ModifyUser() {
 					})
 				}
 			}
+		}
+		if(name.action === "cancel"){
+			nav(Navigate("ALL"))
 		}
 	}
 	if( !userStatus ){

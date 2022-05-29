@@ -24,7 +24,6 @@ export default function Register() {
 	const [userData, setUserData] = useState(userDataFields)
 	const nav = useNavigate()
 	const theme = useTheme(customTheme)
-    const smallDevices = useMediaQuery(theme.breakpoints.up('sm'))
     const mediumDevices = useMediaQuery(theme.breakpoints.up('md'))
     const largeDevices = useMediaQuery(theme.breakpoints.up('lg'))
 
